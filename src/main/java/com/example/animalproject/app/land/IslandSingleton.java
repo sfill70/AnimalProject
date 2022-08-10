@@ -2,16 +2,13 @@ package com.example.animalproject.app.land;
 
 import com.example.animalproject.PlayingField;
 import com.example.animalproject.app.land.residents.Animal;
-import com.example.animalproject.app.land.ThreadIsland.ThreadMoveMaster;
-import com.example.animalproject.app.land.ThreadIsland.TreadInitialization;
-import com.example.animalproject.app.land.residents.predator.Bear;
+import com.example.animalproject.app.land.threadIsland.ThreadClean;
+import com.example.animalproject.app.land.threadIsland.ThreadMoveMaster;
+import com.example.animalproject.app.land.threadIsland.TreadInitialization;
 
 
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 public class IslandSingleton {
     private static volatile IslandSingleton instance;
@@ -19,6 +16,9 @@ public class IslandSingleton {
     static int sizeX = PlayingField.getSizeX();
     static int sizeY = PlayingField.getSizeY();
     private final Cell[][] arrayCell = new Cell[sizeY][sizeX];
+    public static final ConcurrentHashMap<Class<?>, Integer> mapStatisticResidents = new ConcurrentHashMap<>();
+    String lineSeparator = System.lineSeparator();
+    static String separator = System.lineSeparator();
 
     public static IslandSingleton getInstance() {
         if (instance == null) {
@@ -30,20 +30,59 @@ public class IslandSingleton {
         }
         return instance;
     }
-
     public Cell[][] getArrayCell() {
         return arrayCell;
     }
 
+   /**
+    * метод добавления статистики из локации в оющую статистику*/
+    public static void addStatistic(Class<?> clazz, Integer amount) {
+        synchronized (mapStatisticResidents) {
+            if (mapStatisticResidents.containsKey(clazz)) {
+                mapStatisticResidents.put(clazz,
+                        mapStatisticResidents.get(clazz) + amount);
+            } else {
+                mapStatisticResidents.put(clazz, amount);
+            }
+        }
+    }
+
+    /**
+     * метод получения общей статистики*/
+    public String viewStatistic() {
+        StringBuffer sb = new StringBuffer();
+        for (Class<?> clazz : mapStatisticResidents.keySet()
+        ) {
+            sb.append(clazz.getSimpleName()).append(" = ").append(mapStatisticResidents.get(clazz)).append("; ").append(lineSeparator);
+
+        }
+        return sb.toString();
+    }
+    public static String getStatistic() {
+        StringBuffer sb = new StringBuffer();
+        for (Class<?> clazz : mapStatisticResidents.keySet()
+        ) {
+            sb.append(clazz.getSimpleName()).append(" = ").append(mapStatisticResidents.get(clazz)).append("; ").append(separator);
+
+        }
+        return sb.toString();
+    }
+
     public void initialization() {
+        mapStatisticResidents.clear();
         for (int i = 0; i < arrayCell.length; i++) {
             for (int j = 0; j < arrayCell[0].length; j++) {
                 arrayCell[i][j] = new Cell(i, j);
             }
         }
+//        System.out.println(IslandSingleton.getStatistic());
     }
-/**многпоточная инициализация*/
+
+    /**
+     * многпоточная инициализация
+     */
     public void initializationThread() {
+        mapStatisticResidents.clear();
         ExecutorService executorService = Executors.newFixedThreadPool(5);
         for (int i = 0; i < arrayCell.length; i++) {
             TreadInitialization treadInitialization = new TreadInitialization(arrayCell[i], i);
@@ -67,7 +106,8 @@ public class IslandSingleton {
     }
 
     /**
-     * однопоточный метод перемешения животных в локации*/
+     * однопоточный метод перемешения животных в локации
+     */
     public void moves() {
         for (int i = 0; i < arrayCell.length; i++) {
             for (int j = 0; j < arrayCell[0].length; j++) {
@@ -75,24 +115,27 @@ public class IslandSingleton {
                 for (Animal an : animalSet
                 ) {
                     if (an.isMove()) {
+                        /*if (an.getClass().getSimpleName().equals(Bear.class.getSimpleName())) {
+                            System.out.println(an.getName() + "-" + arrayCell[i][j] + "Start!!");
+                        }*/
                         an.move();
+                        /*if (an.getClass().getSimpleName().equals(Bear.class.getSimpleName())) {
+                            System.out.println(an.getCell() + "-" + "Finish!!");
+                        }*/
                     }
                 }
             }
         }
     }
-/**
- * многопоточный метод перемешения животных в локации*/
+
+    /**
+     * многопоточный метод перемешения животных в локации
+     */
     public void movesThread() {
         ExecutorService executorService = Executors.newFixedThreadPool(5);
         for (int i = 0; i < arrayCell.length; i++) {
             ThreadMoveMaster threadMoveMaster = new ThreadMoveMaster(arrayCell[i], i);
             executorService.execute(threadMoveMaster);
-        }
-        try {
-            Thread.sleep(50);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
         }
         executorService.shutdown();
         boolean done;
@@ -108,23 +151,41 @@ public class IslandSingleton {
 
 
     /**
-     * Голодные животные умирают, живые размножаются, isMove -> true, умирание отключено
+     * Голодные животные умирают, живые размножаются, isMove -> true, проверку
+     * на сытость надо перенести в Cell reproduceCellAnimal()
      */
     public void clearAndReproduce() {
+        mapStatisticResidents.clear();
         for (int i = 0; i < arrayCell.length; i++) {
             for (int j = 0; j < arrayCell[0].length; j++) {
-                arrayCell[i][j].setFood(4000 * 100 / ThreadLocalRandom.current().nextInt(50, 100));
-                Set<? extends Animal> animalSet = arrayCell[i][j].getSetResidents();
-                for (Animal an : animalSet
-                ) {
-                    if (an.getDegreeOfSaturation() <= 0) {
-//                        an.dead(an);
-                    }
-                    an.setMove(true);
-                    an.setDegreeOfSaturation(1);
-                }
                 arrayCell[i][j].reproduceCellAnimal();
+                for (Class<?> animalClazz :arrayCell[i][j].getMapCountResidents().keySet()){
+                    addStatistic(animalClazz, arrayCell[i][j].getMapCountResidents().get(animalClazz));
+                }
             }
+        }
+    }
+
+    /**
+     * Голодные животные умирают, живые размножаются, isMove -> true, проверку
+     * на сытость надо перенести в Cell reproduceCellAnimal()
+     */
+    public void clearAndReproduceThread() {
+        mapStatisticResidents.clear();
+        ExecutorService executorService = Executors.newFixedThreadPool(5);
+        for (int i = 0; i < arrayCell.length; i++) {
+            ThreadClean threadClean = new ThreadClean(arrayCell[i], i);
+            executorService.execute(threadClean);
+        }
+        executorService.shutdown();
+        boolean done;
+        try {
+            done = executorService.awaitTermination(100, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        if (done) {
+            executorService.shutdownNow();
         }
     }
 }

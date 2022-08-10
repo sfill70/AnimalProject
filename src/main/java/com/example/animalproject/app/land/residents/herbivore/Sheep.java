@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class Sheep extends Herbivore {
 
     static {
-        UtilAnimal.putMapAmountAnimal(Sheep.class, 140);
+        UtilAnimal.putMapAmountAnimal(Sheep.class, 40);
         UtilAnimal.putSpeedAnimal(Sheep.class, 3);
         UtilAnimal.putAbilityToReproduce(Sheep.class, 5);
     }
@@ -22,7 +22,7 @@ public class Sheep extends Herbivore {
         this.degreeOfSaturation = 0;
     }
 
-    public void decrement(){
+    public void decrement() {
         Sheep.count.decrementAndGet();
         Herbivore.count.decrementAndGet();
         Animal.getCount().decrementAndGet();
@@ -48,10 +48,4 @@ public class Sheep extends Herbivore {
     public Animal madeNewAnimal() {
         return new Sheep();
     }
-
-    /*@Override
-    public Sheep reproduce() {
-        return new Sheep();
-    }*/
-
 }

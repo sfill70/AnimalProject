@@ -7,7 +7,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -18,7 +17,11 @@ public class Cell extends Rectangle {
     /**
      * Вес растений (корм для Травоядных)
      */
-    volatile AtomicInteger food;
+    volatile AtomicInteger foodHerbivore;
+    /**
+     * Остатки травоядных после съедания хищником (падаль)
+     */
+    volatile AtomicInteger carrion;
 
     /**
      * Общий вес Травоядных
@@ -30,12 +33,12 @@ public class Cell extends Rectangle {
     /**
      * Map количество особей каждого вида
      */
-    public ConcurrentHashMap<Class<?>, Integer> mapCountResidents = new ConcurrentHashMap<>();
+    /*final*/ public ConcurrentHashMap<Class<?>, Integer> mapCountResidents = new ConcurrentHashMap<>();
 
     /**
      * Спмсок всеж животных в Локации
      */
-    static final Set<Animal> setResidents = ConcurrentHashMap.newKeySet();
+    public final Set<Animal> setResidents = ConcurrentHashMap.newKeySet();
 
     public Cell() {
     }
@@ -48,8 +51,7 @@ public class Cell extends Rectangle {
 
 
     /**
-     * Метод возвращает String информацию о Локации. Подгружается в JavaFX при инициализации потому,
-     * что выводит информацию при клике на Локацию?
+     * Метод возвращает String информацию о Локации.
      */
     public String viewResidents() {
         StringBuffer sb = new StringBuffer();
@@ -57,7 +59,6 @@ public class Cell extends Rectangle {
         for (Class<?> clazz : mapCountResidents.keySet()
         ) {
             sb.append(clazz.getSimpleName()).append(" = ").append(mapCountResidents.get(clazz)).append("; ").append(lineSeparator);
-
         }
         return sb.toString();
     }
@@ -66,7 +67,8 @@ public class Cell extends Rectangle {
      * Наполнение клетки животными заполняем setResidents Возможно лучьше назвать генератор
      */
     public void initialization() {
-        this.food = new AtomicInteger(3000);
+        this.foodHerbivore = new AtomicInteger(100000);
+        this.carrion = new AtomicInteger(0);
         for (Class<?> animalClazz : UTIL_ANIMAL.getMapAmountAnimal().keySet()
         ) {
             try {
@@ -75,11 +77,13 @@ public class Cell extends Rectangle {
                 Animal animalAny = (Animal) animalConstructor.newInstance();
                 animalAny.setCell(this);
                 this.add(animalAny);
-                int amount = UTIL_ANIMAL.getMapAmountAnimal().get(animalClazz) / 6
+                int amount = UTIL_ANIMAL.getMapAmountAnimal().get(animalClazz) / 4
                         * ThreadLocalRandom.current().nextInt(70, 100) / 100;
                 for (int i = 0; i < amount; i++) {
-                    animalAny.reproduce(animalAny);
+                    Animal animal = animalAny.reproduce(animalAny);
                 }
+                IslandSingleton.addStatistic(aClass, 1 + amount);
+
             } catch (InstantiationException e) {
                 throw new RuntimeException(e);
             } catch (IllegalAccessException e) {
@@ -88,23 +92,52 @@ public class Cell extends Rectangle {
                 throw new RuntimeException(e);
             } catch (NoSuchMethodException e) {
                 throw new RuntimeException(e);
-            }
+            } /*catch (NoSuchFieldException e) {
+                e.printStackTrace();
+            }*/
         }
     }
 
+    /*
+     * Метод удаления голодных животный из локации и размножения
+     * излишняя проверка на удаление*/
     public void reproduceCellAnimal() {
+        setFoodHerbivore(6000 /** 100 / ThreadLocalRandom.current().nextInt(50, 100)*/);
+//        setCarrion(new AtomicInteger(0));
+        setCarrion(new AtomicInteger(this.carrion.get()));
+        Set<? extends Animal> animalSet = this.setResidents;
+        for (Animal an : animalSet
+        ) {
+            if (an.getDegreeOfSaturation() <= 0) {
+                an.dead(an, "Ctll ReproduceCellAnimal()_1");
+            }
+            if (an.isAive()) {
+                an.setMove(true);
+                an.setFree(true);
+                an.setDegreeOfSaturation(an.degreeOfSaturation / 3);
+
+            } else {
+                this.getSetResidents().remove(an);
+                an.getCell().remove(an, "clearAndReproduce() is isDead_2");
+            }
+        }
         for (Class<?> animalClazz : mapCountResidents.keySet()
         ) {
             try {
                 Class<? extends Animal> aClass = (Class<? extends Animal>) animalClazz;
                 Constructor<?> animalConstructor = aClass.getConstructor();
                 Animal animalAny = (Animal) animalConstructor.newInstance();
-                animalAny.decrement();
                 animalAny.setCell(this);
+                animalAny.decrement();
                 int amount = mapCountResidents.get(animalClazz) / 2 / UtilAnimal.getAbilityToReproduce().get(animalClazz);
                 for (int i = 0; i < amount; i++) {
+                    if (!this.isNotFull(animalAny)) {
+                        break;
+                    }
                     animalAny.reproduce(animalAny);
                 }
+
+
             } catch (InstantiationException e) {
                 throw new RuntimeException(e);
             } catch (IllegalAccessException e) {
@@ -133,12 +166,20 @@ public class Cell extends Rectangle {
         this.intY = intY;
     }
 
-    public AtomicInteger getFood() {
-        return food;
+    public AtomicInteger getFoodHerbivore() {
+        return foodHerbivore;
     }
 
-    public void setFood(int food) {
-        this.food = new AtomicInteger(food);
+    public void setFoodHerbivore(int foodHerbivore) {
+        this.foodHerbivore = new AtomicInteger(foodHerbivore);
+    }
+
+    public AtomicInteger getCarrion() {
+        return carrion;
+    }
+
+    public void setCarrion(AtomicInteger carrion) {
+        this.carrion = carrion;
     }
 
     public int getWeightHerbivores() {
@@ -149,37 +190,40 @@ public class Cell extends Rectangle {
         this.weightHerbivores = weightHerbivores;
     }
 
-
+    /**
+     * Метод добавления животного в локацию
+     */
     public void add(Animal animal) {
         synchronized (setResidents) {
             animal.setCell(this);
-            setResidents.add(animal);
-            if (mapCountResidents.containsKey(animal.getClass())) {
-                mapCountResidents.put(animal.getClass(),
-                        mapCountResidents.get(animal.getClass()) + 1);
-            } else {
-                mapCountResidents.put(animal.getClass(), 1);
+            boolean isAdd = setResidents.add(animal);
+            if (isAdd) {
+                if (mapCountResidents.containsKey(animal.getClass())) {
+                    mapCountResidents.put(animal.getClass(),
+                            mapCountResidents.get(animal.getClass()) + 1);
+                } else {
+                    mapCountResidents.put(animal.getClass(), 1);
+                }
+                animal.setFree(true);
             }
         }
     }
 
     /**
-     * метод удаления живонтого из локации. В закоментированном коде можно увидеть, что животное не всегда
-     * удаляется, особенно в многопотоке, переписал 100500 hashCode и equals .
+     * метод удаления живонтого из локации.
      */
-    public void remove(Animal animal) {
+    public void remove(Animal animal, String st) {
         synchronized (setResidents) {
-            setResidents.remove(animal);
-            if (mapCountResidents.containsKey(animal.getClass())) {
-                mapCountResidents.put(animal.getClass(),
-                        mapCountResidents.get(animal.getClass()) - 1);
+            animal.setFree(false);
+            animal.setMove(false);
+            boolean isRemove = setResidents.remove(animal);
+            if (isRemove) {
+                if (mapCountResidents.containsKey(animal.getClass())) {
+                    mapCountResidents.put(animal.getClass(),
+                            mapCountResidents.get(animal.getClass()) - 1);
+                }
             }
         }
-       /* if (setResidents.contains(animal)) {
-                System.out.print("Cell remove !!!!" + animal.getName() + animal.equals(animal) + " / ");
-            removeWithIterator(animal);
-                System.out.println(setResidents.contains(animal) + "-" + animal.getName());
-        }*/
     }
 
     /**
@@ -203,10 +247,6 @@ public class Cell extends Rectangle {
         return mapCountResidents;
     }
 
-    public void setMapCountResidents(ConcurrentHashMap<Class<?>, Integer> mapCountResidents) {
-        this.mapCountResidents = mapCountResidents;
-    }
-
     /**
      * Метод проверки свободного места в Локации для животного
      */
@@ -215,7 +255,7 @@ public class Cell extends Rectangle {
         if (mapCountResidents.containsKey(animal.getClass())) {
             amount = mapCountResidents.get(animal.getClass());
         }
-        UTIL_ANIMAL.isNotFull(animal, amount);
+
         return UTIL_ANIMAL.isNotFull(animal, amount);
     }
 
@@ -224,7 +264,7 @@ public class Cell extends Rectangle {
     public String toString() {
         return "Cell{" +
                 "x=" + intX +
-                ", y=" + intY + ", food = " + food + "} "   /*+ ", Set=" + setResidents +
+                ", y=" + intY + ", foodHerbivore = " + foodHerbivore + ", carrion = " + carrion + "} "   /*+ ", Set=" + setResidents +
                 '}'*/;
     }
 

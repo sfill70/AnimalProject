@@ -6,10 +6,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class Boar extends Herbivore {
     static {
-        UtilAnimal.putMapAmountAnimal(Boar.class, 50);
+        UtilAnimal.putMapAmountAnimal(Boar.class, 150);
         chanceSuccessfulHunt.put(Mouse.class, 50);
         UtilAnimal.putSpeedAnimal(Boar.class, 2);
-        UtilAnimal.putAbilityToReproduce(Boar.class, 3);
+        UtilAnimal.putAbilityToReproduce(Boar.class, 1);
     }
     static volatile AtomicInteger count = new AtomicInteger(0);
 
@@ -48,8 +48,4 @@ public class Boar extends Herbivore {
     public Animal madeNewAnimal() {
         return new Boar();
     }
-
-
-
-
 }

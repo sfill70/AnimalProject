@@ -8,10 +8,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class Deer extends Herbivore {
 
     static {
-        UtilAnimal.putMapAmountAnimal(Deer.class, 70);
+        UtilAnimal.putMapAmountAnimal(Deer.class, 170);
         UtilAnimal.putSpeedAnimal(Deer.class, 5);
-        UtilAnimal.putAbilityToReproduce(Deer.class, 2);
+        UtilAnimal.putAbilityToReproduce(Deer.class, 1);
     }
+
     static volatile AtomicInteger count = new AtomicInteger(0);
 
     public Deer() {
@@ -21,7 +22,7 @@ public class Deer extends Herbivore {
         this.degreeOfSaturation = 0;
     }
 
-    public void decrement(){
+    public void decrement() {
         Deer.count.decrementAndGet();
         Herbivore.count.decrementAndGet();
         Animal.getCount().decrementAndGet();
@@ -47,9 +48,4 @@ public class Deer extends Herbivore {
     public Animal madeNewAnimal() {
         return new Deer();
     }
-
-   /* @Override
-    public Deer reproduce() {
-        return new Deer();
-    }*/
 }

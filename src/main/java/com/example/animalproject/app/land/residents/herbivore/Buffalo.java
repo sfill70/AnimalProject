@@ -47,13 +47,4 @@ public class Buffalo extends Herbivore {
     public Animal madeNewAnimal() {
         return new Buffalo();
     }
-
-
-
-    /*@Override
-    public Buffalo reproduce() {
-        return new Buffalo();
-    }*/
-
-
 }

@@ -8,9 +8,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class Rabbit extends Herbivore {
 
     static {
-        UtilAnimal.putMapAmountAnimal(Rabbit.class, 150);
+        UtilAnimal.putMapAmountAnimal(Rabbit.class, 550);
         UtilAnimal.putSpeedAnimal(Rabbit.class, 2);
-        UtilAnimal.putAbilityToReproduce(Rabbit.class, 5);
+        UtilAnimal.putAbilityToReproduce(Rabbit.class, 1);
     }
 
     static volatile AtomicInteger count = new AtomicInteger(0);
@@ -48,9 +48,4 @@ public class Rabbit extends Herbivore {
     public Animal madeNewAnimal() {
         return new Rabbit();
     }
-
-   /* @Override
-    public Rabbit reproduce() {
-        return new Rabbit();
-    }*/
 }

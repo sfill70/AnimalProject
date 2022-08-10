@@ -1,4 +1,4 @@
-package com.example.animalproject.app.land.ThreadIsland;
+package com.example.animalproject.app.land.threadIsland;
 
 import com.example.animalproject.PlayingField;
 import com.example.animalproject.app.land.Cell;
@@ -8,6 +8,7 @@ import com.example.animalproject.app.land.residents.Animal;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class ThreadMoveMaster implements Runnable {
 
@@ -26,7 +27,7 @@ public class ThreadMoveMaster implements Runnable {
     @Override
     public void run() {
         for (int j = 0; j < arrayCell.length; j++) {
-            ExecutorService executorService = Executors.newFixedThreadPool(5);
+            ExecutorService executorService = Executors.newFixedThreadPool(10);
             Set<? extends Animal> animalSet = islandSingleton.getArrayCell()[intX][j].getSetResidents();
             for (Animal an : animalSet
             ) {
@@ -37,12 +38,15 @@ public class ThreadMoveMaster implements Runnable {
                 }
             }
             executorService.shutdown();
+            boolean done;
             try {
-                Thread.sleep(40);
+                done = executorService.awaitTermination(4, TimeUnit.MILLISECONDS);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            executorService.shutdown();
+            if (done) {
+                executorService.shutdownNow();
+            }
         }
     }
 }

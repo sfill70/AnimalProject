@@ -13,10 +13,10 @@ public class Wolf extends Predator {
 
     static {
         UtilAnimal.putMapAmountAnimal(Wolf.class, 30);
-        Wolf.chanceSuccessfulHunt.put(Horse.class, 10);
-        Wolf.chanceSuccessfulHunt.put(Deer.class, 15);
-        Wolf.chanceSuccessfulHunt.put(Rabbit.class, 60);
-        Wolf.chanceSuccessfulHunt.put(Mouse.class, 80);
+        Wolf.chanceSuccessfulHunt.put(Horse.class, 30);
+        Wolf.chanceSuccessfulHunt.put(Deer.class, 35);
+        Wolf.chanceSuccessfulHunt.put(Rabbit.class, 50);
+        Wolf.chanceSuccessfulHunt.put(Mouse.class, 60);
         Wolf.chanceSuccessfulHunt.put(Goat.class, 60);
         Wolf.chanceSuccessfulHunt.put(Sheep.class, 70);
         UtilAnimal.putSpeedAnimal(Wolf.class, 3);
@@ -41,7 +41,7 @@ public class Wolf extends Predator {
         Wolf.count = count;
     }
 
-    public void decrement(){
+    public void decrement() {
         Wolf.count.decrementAndGet();
         Predator.count.decrementAndGet();
         Animal.getCount().decrementAndGet();

@@ -9,8 +9,8 @@ public class Mouse extends Herbivore {
 
     static {
         UtilAnimal.putMapAmountAnimal(Mouse.class, 500);
-        UtilAnimal.putSpeedAnimal(Mouse.class, 1);
-        UtilAnimal.putAbilityToReproduce(Mouse.class, 8);
+        UtilAnimal.putSpeedAnimal(Mouse.class, 3);
+        UtilAnimal.putAbilityToReproduce(Mouse.class, 2);
     }
 
     static volatile AtomicInteger count = new AtomicInteger(0);
@@ -48,9 +48,4 @@ public class Mouse extends Herbivore {
     public Animal madeNewAnimal() {
         return new Mouse();
     }
-
-    /*@Override
-    public Mouse reproduce() {
-        return new Mouse();
-    }*/
 }

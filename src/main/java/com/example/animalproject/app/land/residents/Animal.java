@@ -3,11 +3,8 @@ package com.example.animalproject.app.land.residents;
 import com.example.animalproject.PlayingField;
 import com.example.animalproject.app.land.Cell;
 import com.example.animalproject.app.land.UtilAnimal;
-import com.example.animalproject.app.land.residents.predator.Bear;
-import com.example.animalproject.app.land.residents.predator.Predator;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -18,7 +15,12 @@ public abstract class Animal implements Comparable<Animal> {
     boolean isAive = true;
     boolean isMove = true;
     /**
+     * Переменная указывает на то, что животное в данный момент свободно для оперций с ним
+     */
+    boolean isFree = true;
+    /**
      * общее количество животных данного вида
+     * оставлено для создания быстрой общей статистики.
      */
     static volatile AtomicInteger count = new AtomicInteger(0);
     public int weight;
@@ -33,10 +35,6 @@ public abstract class Animal implements Comparable<Animal> {
      */
     public int degreeOfSaturation = 0;
 
-    /**
-     * Срок жизни
-     */
-    public int longevity;
     public String icon;
     public String name;
     public Cell cell;
@@ -53,7 +51,7 @@ public abstract class Animal implements Comparable<Animal> {
 
     public Animal() {
         count.incrementAndGet();
-        this.name = animal.getClass().getSimpleName() + "-" + count;
+        this.name = animal.getClass().getSimpleName() + "-" + count.get() * ThreadLocalRandom.current().nextInt(50, 100);
     }
 
     /**
@@ -65,12 +63,6 @@ public abstract class Animal implements Comparable<Animal> {
         return x;
     }
 
-
-    public static void main(String[] args) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-
-
-    }
-
     /**
      * Метод получения доступных локаций на расстоянии speed от текщей локации,
      * квадратная канва из локаций размером = speed+1, возвращает отсортированный по food в порядке убывания
@@ -78,8 +70,8 @@ public abstract class Animal implements Comparable<Animal> {
      * Не используется
      */
     public List<Cell> getListCellToMoves(int speed) {
-        Comparator<Cell> cellComparator = (o1, o2) -> Integer.compare(o2.getFood().get(),
-                o1.getFood().get());
+        Comparator<Cell> cellComparator = (o1, o2) -> Integer.compare(o2.getFoodHerbivore().get(),
+                o1.getFoodHerbivore().get());
         List<Cell> cellList = new ArrayList<>();
         Cell cell = this.cell;
         int x = cell.getIntX();
@@ -99,15 +91,14 @@ public abstract class Animal implements Comparable<Animal> {
 
     /**
      * Метод получения окружающих Локации нужен если реализовать многоходовый режим животного
-     * возвращает отсортированный по food List (сортировка по убыванию).
+     * возвращает отсортированный в по food List (сортировка по убыванию) или в случайном порядке.
      * Используется!.
      */
-    public List<Cell> getListCellToMoves(Cell previousCell) {
-
+    public List<Cell> getListCellToMoves(Cell previousCell, Cell homeCell) {
         Comparator<Cell> cellComparator = new Comparator<Cell>() {
             @Override
             public int compare(Cell o1, Cell o2) {
-                return Integer.compare(o2.getFood().get(), o1.getFood().get());
+                return Integer.compare(o2.getFoodHerbivore().get(), o1.getFoodHerbivore().get());
             }
         };
         List<Cell> cellList = new ArrayList<>();
@@ -118,11 +109,11 @@ public abstract class Animal implements Comparable<Animal> {
                 cellList.add(PlayingField.getIsland().getArrayCell()[getCoordinates(i, sizeY)][getCoordinates(j, sizeX)]);
             }
         }
-        cellList.remove(this.getCell());
-        if (cellList.contains(this.getCell())) {
-            cellList.remove(this.getCell());
-        }
+        cellList.remove(previousCell);
+        cellList.remove(homeCell);
         cellList.sort(cellComparator);
+        /**Закоментировать следующую строку для сортировки по убыванию*/
+        Collections.shuffle(cellList);
         return cellList;
     }
 
@@ -132,15 +123,21 @@ public abstract class Animal implements Comparable<Animal> {
      * остается на месте. Для хищников не переопределялся, где больше травоядных лучше охотиться
      */
     public void move() {
+        if (!this.isMove || !this.isAive) {
+            return;
+        }
+        Cell homeCell = this.getCell();
+        homeCell.remove(this, "Animal move Home");
         int speed = UtilAnimal.getMapSpeedAnimal().get(this.getClass());
         if (speed == 0) {
             eat(animal.getCell());
             return;
         }
-        Cell currentCell = this.getCell();
+        Cell currentCell = homeCell;
         Cell nextCell = null;
         for (int i = 0; i <= speed; i++) {
-            List<Cell> listCellToMoves = getListCellToMoves(currentCell);
+            List<Cell> listCellToMoves = getListCellToMoves(currentCell, homeCell);
+            cell.isNotFull(this);
             for (Cell cell : listCellToMoves) {
                 if (cell.isNotFull(this)) {
                     nextCell = cell;
@@ -154,12 +151,17 @@ public abstract class Animal implements Comparable<Animal> {
             }
         }
         if (nextCell != null) {
-            this.cell.remove(this);
-            this.setCell(nextCell);
-            nextCell.add(this);
             this.isMove = false;
+            nextCell.add(this);
+            this.isFree = true;
+        } else {
+            this.isMove = false;
+            this.setCell(homeCell);
+            homeCell.add(this);
+            this.isFree = true;
         }
     }
+
 
     /**
      * Метод еды Травоядных, у Хищников переопределен
@@ -169,12 +171,12 @@ public abstract class Animal implements Comparable<Animal> {
             return;
         }
         int difference = getFoodConsumption() - getDegreeOfSaturation();
-        if (this.cell.getFood().get() >= difference) {
-            this.cell.setFood(this.cell.getFood().get() - difference);
+        if (this.cell.getFoodHerbivore().get() >= difference) {
+            this.cell.setFoodHerbivore(this.cell.getFoodHerbivore().get() - difference);
             setDegreeOfSaturation(getFoodConsumption());
         } else {
-            setDegreeOfSaturation(getDegreeOfSaturation() + this.cell.getFood().get());
-            this.cell.setFood(0);
+            setDegreeOfSaturation(getDegreeOfSaturation() + this.cell.getFoodHerbivore().get());
+            this.cell.setFoodHerbivore(0);
         }
     }
 
@@ -219,25 +221,39 @@ public abstract class Animal implements Comparable<Animal> {
 
     /**
      * Другой вариант создания животного. Реализован в наследниках.
-     * Используется при размножении.
+     * Не используется
      */
     public abstract Animal madeNewAnimal();
 
+    /**
+     * Смерть животного удаляет животное из локации
+     * String method в аргументах метода, для будущего логирования и удобства настройки
+     */
+    public <T extends Animal> void dead(T animal, String method) {
+        isAive = false;
+        isMove = false;
+        Animal.count.decrementAndGet();
+        animal.getCell().remove(animal, "Animal dead() ");
+    }
+
+
+    public boolean isFree() {
+        return isFree;
+    }
+
+    public void setFree(boolean free) {
+        isFree = free;
+    }
+
+    /**
+     * уменьшение обшего количества животных данного вида
+     * оставлено для создания быстрой общей статистики.
+     */
     public void decrement() {
     }
 
     public static AtomicInteger getCount() {
         return count;
-    }
-
-    public static void decrementCount() {
-        Animal.count.decrementAndGet();
-    }
-
-
-    public <T extends Animal> void dead(T animal) {
-        Animal.count.decrementAndGet();
-        animal.getCell().remove(animal);
     }
 
     public int getDegreeOfSaturation() {
@@ -276,28 +292,12 @@ public abstract class Animal implements Comparable<Animal> {
         this.weight = weight;
     }
 
-    public int getSpeed() {
-        return speed;
-    }
-
-    public void setSpeed(int speed) {
-        this.speed = speed;
-    }
-
     public int getFoodConsumption() {
         return foodConsumption;
     }
 
     public void setFoodConsumption(int foodConsumption) {
         this.foodConsumption = foodConsumption;
-    }
-
-    public int getLongevity() {
-        return longevity;
-    }
-
-    public void setLongevity(int longevity) {
-        this.longevity = longevity;
     }
 
     public String getIcon() {
@@ -310,14 +310,6 @@ public abstract class Animal implements Comparable<Animal> {
 
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getCountAnimal() {
-        return count.get();
     }
 
     public Cell getCell() {
@@ -345,22 +337,16 @@ public abstract class Animal implements Comparable<Animal> {
     }
 
 
-
     @Override
     public String toString() {
         return animal.getClass().getSimpleName() + " {" + "icon='" + icon + '\'' + ", name='" + name + '\'' + '}';
     }
 
+    /*
+     * Требуется имплиметация Comparable для возможности использования коллекций ConcurrentSet <Animal> */
     @Override
     public int compareTo(Animal o) {
-        int result = Integer.compare(this.hashCode(), o.hashCode());
-        return result;
+        return Integer.compare(this.hashCode(), o.hashCode());
     }
 
-    /*  @Override
-    public int hashCode() {
-        int result = weight ;
-        result = 31 * result + foodConsumption;
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        return result;}*/
 }

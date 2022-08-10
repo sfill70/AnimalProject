@@ -47,9 +47,4 @@ public class Horse extends Herbivore {
     public Animal madeNewAnimal() {
         return new Horse();
     }
-
-    /*@Override
-    public Horse reproduce() {
-        return new Horse();
-    }*/
 }

@@ -12,11 +12,11 @@ public class Fox extends Predator {
     public static volatile AtomicInteger count = new AtomicInteger(0);
 
     static {
-        UtilAnimal.putMapAmountAnimal(Fox.class, 30);
-        chanceSuccessfulHunt.put(Rabbit.class, 70);
-        chanceSuccessfulHunt.put(Mouse.class, 90);
-        UtilAnimal.putSpeedAnimal(Fox.class, 2);
-        UtilAnimal.putAbilityToReproduce(Fox.class, 2);
+        UtilAnimal.putMapAmountAnimal(Fox.class, 40);
+        chanceSuccessfulHunt.put(Rabbit.class, 50);
+        chanceSuccessfulHunt.put(Mouse.class, 50);
+        UtilAnimal.putSpeedAnimal(Fox.class, 5);
+        UtilAnimal.putAbilityToReproduce(Fox.class, 1);
     }
 
     public Fox() {
@@ -43,6 +43,4 @@ public class Fox extends Predator {
     public static void setCount(AtomicInteger count) {
         count = count;
     }
-
-
 }

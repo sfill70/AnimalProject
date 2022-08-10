@@ -11,11 +11,11 @@ public class Eagle extends Predator {
     public static volatile AtomicInteger count = new AtomicInteger(0);
 
     static {
-        UtilAnimal.putMapAmountAnimal(Eagle.class, 20);
+        UtilAnimal.putMapAmountAnimal(Eagle.class, 30);
         chanceSuccessfulHunt.put(Rabbit.class, 90);
         chanceSuccessfulHunt.put(Mouse.class, 90);
-        UtilAnimal.putSpeedAnimal(Eagle.class, 3);
-        UtilAnimal.putAbilityToReproduce(Eagle.class, 2);
+        UtilAnimal.putSpeedAnimal(Eagle.class, 4);
+        UtilAnimal.putAbilityToReproduce(Eagle.class, 1);
     }
 
     public Eagle() {

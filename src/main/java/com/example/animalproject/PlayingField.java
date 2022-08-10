@@ -63,7 +63,7 @@ public class PlayingField extends Application {
         Group panel = new Group();
         for (int y = 0; y != sizeY; y++) {
             for (int x = 0; x != sizeX; x++) {
-                Cell rect = this.buildRectangle(x, y, 10, ISLAND_SINGLETON.getArrayCell()[y][x]);
+                Cell rect = this.buildRectangle(x, y, 15, ISLAND_SINGLETON.getArrayCell()[y][x]);
                 panel.getChildren().add(rect);
                 rect.setOnMouseClicked(this.buildMouseEvent(panel, rect.viewResidents()));
             }
@@ -84,21 +84,13 @@ public class PlayingField extends Application {
             number = 1;
         }
         for (int i = 0; i < number; i++) {
-            if (isStart) {
                 if (isMuliThread) {
                     ISLAND_SINGLETON.movesThread();
+                    ISLAND_SINGLETON.clearAndReproduceThread();
                 } else {
                     ISLAND_SINGLETON.moves();
+                    ISLAND_SINGLETON.clearAndReproduceThread();
                 }
-                isStart = false;
-            } else {
-                ISLAND_SINGLETON.clearAndReproduce();
-                if (isMuliThread) {
-                    ISLAND_SINGLETON.movesThread();
-                } else {
-                    ISLAND_SINGLETON.moves();
-                }
-            }
         }
         return rendering();
     }
@@ -155,7 +147,6 @@ public class PlayingField extends Application {
             Cell rect = (Cell) event.getTarget();
             rect.setFill(Color.AQUA);
             this.showAlert(st);
-
         };
     }
 
@@ -210,7 +201,8 @@ public class PlayingField extends Application {
         );
         Button statistics = new Button("Statistics");
         statistics.setOnMouseClicked(
-                event -> statistic(UtilAnimal.getStatistic()));
+//                event -> statistic(UtilAnimal.getStatistic()));
+                event -> statistic(ISLAND_SINGLETON.viewStatistic()));
 
         FlowPane generalFlowPane = new FlowPane();
         generalFlowPane.setPadding(new Insets(10));

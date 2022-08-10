@@ -12,7 +12,7 @@ public class Duck extends Herbivore {
         UtilAnimal.putMapAmountAnimal(Duck.class, 200);
         chanceSuccessfulHunt.put(Caterpillar.class.getClass(), 100);
         UtilAnimal.putSpeedAnimal(Duck.class, 4);
-        UtilAnimal.putAbilityToReproduce(Duck.class, 8);
+        UtilAnimal.putAbilityToReproduce(Duck.class, 1);
 
     }
 
@@ -61,19 +61,14 @@ public class Duck extends Herbivore {
            if (this.isEat(animal)) {
                if (difference > animal.getWeight()) {
                    difference = difference - animal.getWeight();
-                   animal.dead(animal);
+                   animal.dead(animal, "Duck eat");
                } else {
                    setDegreeOfSaturation(getFoodConsumption());
-                   animal.dead(animal);
+                   animal.dead(animal, "Duck eat");
                    break;
                }
            }
        }
        super.eat(cell);
    }
-
-    /*@Override
-    public Duck reproduce() {
-        return new Duck();
-    }*/
 }

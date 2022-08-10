@@ -1,8 +1,5 @@
-package com.example.animalproject.app.land.ThreadIsland;
+package com.example.animalproject.app.land.threadIsland;
 
-import com.example.animalproject.PlayingField;
-import com.example.animalproject.app.land.Cell;
-import com.example.animalproject.app.land.IslandSingleton;
 import com.example.animalproject.app.land.residents.Animal;
 
 public class ThreadMoveSlave implements Runnable{
@@ -20,7 +17,7 @@ public class ThreadMoveSlave implements Runnable{
     public void run() {
         animal.move();
         try {
-            Thread.sleep(5);
+            Thread.sleep(4);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

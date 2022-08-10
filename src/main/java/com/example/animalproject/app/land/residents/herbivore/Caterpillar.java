@@ -12,7 +12,7 @@ public class Caterpillar extends Herbivore {
     static {
         UtilAnimal.putMapAmountAnimal(Caterpillar.class, 1000);
         UtilAnimal.putSpeedAnimal(Caterpillar.class, 0);
-        UtilAnimal.putAbilityToReproduce(Caterpillar.class, 5);
+        UtilAnimal.putAbilityToReproduce(Caterpillar.class, 1);
     }
 
     public Caterpillar() {
@@ -20,6 +20,19 @@ public class Caterpillar extends Herbivore {
         this.weight = 1;
         this.foodConsumption = 1;
         this.degreeOfSaturation = 1;
+    }
+
+    @Override
+    public void move() {
+        eat(this.getCell());
+    }
+
+    @Override
+    public void eat(Cell cell) {
+        if(cell.getFoodHerbivore().get()>1){
+//            cell.setFood(cell.getFood().get()-1);
+            degreeOfSaturation = foodConsumption;
+        }
     }
 
     public void decrement(){
@@ -49,8 +62,5 @@ public class Caterpillar extends Herbivore {
     public Animal madeNewAnimal() {
         return new Caterpillar();
     }
-
-
-
 
 }
