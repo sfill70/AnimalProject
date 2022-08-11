@@ -7,19 +7,16 @@ import com.example.animalproject.app.land.threadIsland.ThreadClean;
 import com.example.animalproject.app.land.threadIsland.ThreadMoveMaster;
 import com.example.animalproject.app.land.threadIsland.TreadInitialization;
 
-
 import java.util.Set;
 import java.util.concurrent.*;
 
 public class IslandSingleton {
     private static volatile IslandSingleton instance;
-
     static int sizeX = PlayingField.getSizeX();
     static int sizeY = PlayingField.getSizeY();
     private final Cell[][] arrayCell = new Cell[sizeY][sizeX];
     public static final ConcurrentHashMap<Class<?>, Integer> mapStatisticResidents = new ConcurrentHashMap<>();
     String lineSeparator = System.lineSeparator();
-    static String separator = System.lineSeparator();
 
     public static IslandSingleton getInstance() {
         if (instance == null) {
@@ -63,16 +60,6 @@ public class IslandSingleton {
         return sb.toString();
     }
 
-    public static String getStatistic() {
-        StringBuffer sb = new StringBuffer();
-        for (Class<?> clazz : mapStatisticResidents.keySet()
-        ) {
-            sb.append(clazz.getSimpleName()).append(" = ").append(mapStatisticResidents.get(clazz)).append("; ").append(separator);
-
-        }
-        return sb.toString();
-    }
-
     public void initialization() {
         mapStatisticResidents.clear();
         for (int i = 0; i < arrayCell.length; i++) {
@@ -80,7 +67,6 @@ public class IslandSingleton {
                 arrayCell[i][j] = new Cell(i, j);
             }
         }
-//        System.out.println(IslandSingleton.getStatistic());
     }
 
     /**
@@ -166,8 +152,7 @@ public class IslandSingleton {
     }
 
     /**
-     * Голодные животные умирают, живые размножаются, isMove -> true, проверку
-     * на сытость надо перенести в Cell reproduceCellAnimal()
+     * Голодные животные умирают, живые размножаются, isMove -> true.
      */
     public void clearAndReproduceThread() {
         mapStatisticResidents.clear();
@@ -179,7 +164,7 @@ public class IslandSingleton {
         executorService.shutdown();
         boolean done;
         try {
-            done = executorService.awaitTermination(100, TimeUnit.MILLISECONDS);
+            done = executorService.awaitTermination(Setup.getTIME_OUT(), TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
