@@ -1,7 +1,7 @@
-package com.example.animalproject.app.land.residents.predator;
+package com.example.animalproject.app.land.resident.predator;
 
 import com.example.animalproject.app.land.Cell;
-import com.example.animalproject.app.land.residents.Animal;
+import com.example.animalproject.app.land.resident.Animal;
 
 import java.lang.reflect.Field;
 import java.util.concurrent.atomic.AtomicInteger;

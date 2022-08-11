@@ -2,7 +2,7 @@ package com.example.animalproject.app.land;
 
 import com.example.animalproject.PlayingField;
 import com.example.animalproject.Setup;
-import com.example.animalproject.app.land.residents.Animal;
+import com.example.animalproject.app.land.resident.Animal;
 import com.example.animalproject.app.land.threadIsland.ThreadClean;
 import com.example.animalproject.app.land.threadIsland.ThreadMoveMaster;
 import com.example.animalproject.app.land.threadIsland.TreadInitialization;

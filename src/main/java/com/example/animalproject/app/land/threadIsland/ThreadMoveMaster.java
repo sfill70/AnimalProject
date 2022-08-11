@@ -4,7 +4,7 @@ import com.example.animalproject.PlayingField;
 import com.example.animalproject.Setup;
 import com.example.animalproject.app.land.Cell;
 import com.example.animalproject.app.land.IslandSingleton;
-import com.example.animalproject.app.land.residents.Animal;
+import com.example.animalproject.app.land.resident.Animal;
 
 import java.util.Set;
 import java.util.concurrent.ExecutorService;

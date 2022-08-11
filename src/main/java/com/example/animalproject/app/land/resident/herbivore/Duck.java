@@ -1,8 +1,8 @@
-package com.example.animalproject.app.land.residents.herbivore;
+package com.example.animalproject.app.land.resident.herbivore;
 
 import com.example.animalproject.app.land.Cell;
 import com.example.animalproject.app.land.UtilAnimal;
-import com.example.animalproject.app.land.residents.Animal;
+import com.example.animalproject.app.land.resident.Animal;
 
 import java.util.concurrent.atomic.AtomicInteger;
 

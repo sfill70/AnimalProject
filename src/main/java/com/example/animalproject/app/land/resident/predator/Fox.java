@@ -1,9 +1,9 @@
-package com.example.animalproject.app.land.residents.predator;
+package com.example.animalproject.app.land.resident.predator;
 
 import com.example.animalproject.app.land.UtilAnimal;
-import com.example.animalproject.app.land.residents.Animal;
-import com.example.animalproject.app.land.residents.herbivore.Mouse;
-import com.example.animalproject.app.land.residents.herbivore.Rabbit;
+import com.example.animalproject.app.land.resident.Animal;
+import com.example.animalproject.app.land.resident.herbivore.Mouse;
+import com.example.animalproject.app.land.resident.herbivore.Rabbit;
 
 import java.util.concurrent.atomic.AtomicInteger;
 

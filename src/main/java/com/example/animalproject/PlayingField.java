@@ -220,14 +220,4 @@ public class PlayingField extends Application {
         stage.setResizable(false);
         stage.show();
     }
-     /*
-    * long start;
-        long duration;
-        boolean isNumberFound;
-
-        start = System.nanoTime();
-        isNumberFound = arrayList.contains(line);
-        duration = System.nanoTime() - start;*/
-
-
-}
+     }

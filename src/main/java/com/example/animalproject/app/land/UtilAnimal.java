@@ -1,8 +1,8 @@
 package com.example.animalproject.app.land;
 
-import com.example.animalproject.app.land.residents.Animal;
-import com.example.animalproject.app.land.residents.herbivore.*;
-import com.example.animalproject.app.land.residents.predator.*;
+import com.example.animalproject.app.land.resident.Animal;
+import com.example.animalproject.app.land.resident.herbivore.*;
+import com.example.animalproject.app.land.resident.predator.*;
 
 import java.util.concurrent.ConcurrentHashMap;
 

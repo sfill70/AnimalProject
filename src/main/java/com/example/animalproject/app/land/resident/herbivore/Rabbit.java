@@ -1,28 +1,29 @@
-package com.example.animalproject.app.land.residents.herbivore;
+package com.example.animalproject.app.land.resident.herbivore;
 
 import com.example.animalproject.app.land.UtilAnimal;
-import com.example.animalproject.app.land.residents.Animal;
+import com.example.animalproject.app.land.resident.Animal;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class Buffalo extends Herbivore {
-    static volatile AtomicInteger count = new AtomicInteger(0);
+public class Rabbit extends Herbivore {
 
     static {
-        UtilAnimal.putMapAmountAnimal(Buffalo.class, 10);
-        UtilAnimal.putSpeedAnimal(Buffalo.class, 3);
-        UtilAnimal.putAbilityToReproduce(Buffalo.class, 1);
+        UtilAnimal.putMapAmountAnimal(Rabbit.class, 550);
+        UtilAnimal.putSpeedAnimal(Rabbit.class, 2);
+        UtilAnimal.putAbilityToReproduce(Rabbit.class, 1);
     }
 
-    public Buffalo() {
+    static volatile AtomicInteger count = new AtomicInteger(0);
+
+    public Rabbit() {
         count.incrementAndGet();
-        this.weight = 700;
-        this.foodConsumption = 100;
+        this.weight = 3;
+        this.foodConsumption = 2;
         this.degreeOfSaturation = 0;
     }
 
     public void decrement(){
-        Buffalo.count.decrementAndGet();
+        Rabbit.count.decrementAndGet();
         Herbivore.count.decrementAndGet();
         Animal.getCount().decrementAndGet();
     }
@@ -45,6 +46,6 @@ public class Buffalo extends Herbivore {
 
     @Override
     public Animal madeNewAnimal() {
-        return new Buffalo();
+        return new Rabbit();
     }
 }

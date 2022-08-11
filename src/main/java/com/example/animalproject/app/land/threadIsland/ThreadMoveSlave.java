@@ -1,6 +1,6 @@
 package com.example.animalproject.app.land.threadIsland;
 
-import com.example.animalproject.app.land.residents.Animal;
+import com.example.animalproject.app.land.resident.Animal;
 
 public class ThreadMoveSlave implements Runnable{
     static int count;

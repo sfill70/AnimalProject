@@ -1,7 +1,7 @@
 package com.example.animalproject.app.land;
 
 import javafx.scene.shape.Rectangle;
-import com.example.animalproject.app.land.residents.Animal;
+import com.example.animalproject.app.land.resident.Animal;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;

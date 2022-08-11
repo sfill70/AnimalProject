@@ -1,29 +1,29 @@
-package com.example.animalproject.app.land.residents.herbivore;
+package com.example.animalproject.app.land.resident.herbivore;
+
 import com.example.animalproject.app.land.UtilAnimal;
-import com.example.animalproject.app.land.residents.Animal;
+import com.example.animalproject.app.land.resident.Animal;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class Boar extends Herbivore {
+public class Sheep extends Herbivore {
+
     static {
-        UtilAnimal.putMapAmountAnimal(Boar.class, 150);
-        chanceSuccessfulHunt.put(Mouse.class, 50);
-        UtilAnimal.putSpeedAnimal(Boar.class, 2);
-        UtilAnimal.putAbilityToReproduce(Boar.class, 1);
+        UtilAnimal.putMapAmountAnimal(Sheep.class, 40);
+        UtilAnimal.putSpeedAnimal(Sheep.class, 3);
+        UtilAnimal.putAbilityToReproduce(Sheep.class, 5);
     }
+
     static volatile AtomicInteger count = new AtomicInteger(0);
 
-
-
-    public Boar() {
+    public Sheep() {
         count.incrementAndGet();
-        this.weight = 50;
-        this.foodConsumption = 50;
+        this.weight = 70;
+        this.foodConsumption = 15;
         this.degreeOfSaturation = 0;
     }
 
-    public void decrement(){
-        Boar.count.decrementAndGet();
+    public void decrement() {
+        Sheep.count.decrementAndGet();
         Herbivore.count.decrementAndGet();
         Animal.getCount().decrementAndGet();
     }
@@ -46,6 +46,6 @@ public class Boar extends Herbivore {
 
     @Override
     public Animal madeNewAnimal() {
-        return new Boar();
+        return new Sheep();
     }
 }

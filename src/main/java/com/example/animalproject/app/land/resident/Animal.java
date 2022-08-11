@@ -1,4 +1,4 @@
-package com.example.animalproject.app.land.residents;
+package com.example.animalproject.app.land.resident;
 
 import com.example.animalproject.PlayingField;
 import com.example.animalproject.app.land.Cell;
@@ -25,7 +25,6 @@ public abstract class Animal implements Comparable<Animal> {
     static volatile AtomicInteger count = new AtomicInteger(0);
     public int weight;
     public int speed;
-
     /**
      * потребление пищи
      */
@@ -34,7 +33,6 @@ public abstract class Animal implements Comparable<Animal> {
      * степень насыщения
      */
     public int degreeOfSaturation = 0;
-
     public String icon;
     public String name;
     public Cell cell;
@@ -47,7 +45,6 @@ public abstract class Animal implements Comparable<Animal> {
      */
 //    public static ConcurrentHashMap<String, Integer> chanceSuccessfulHunt = new ConcurrentHashMap<>();
     public static ConcurrentHashMap<Class<?>, Integer> chanceSuccessfulHunt = new ConcurrentHashMap<>();
-
 
     public Animal() {
         count.incrementAndGet();
@@ -140,7 +137,6 @@ public abstract class Animal implements Comparable<Animal> {
         Cell nextCell = null;
         for (int i = 0; i <= speed; i++) {
             List<Cell> listCellToMoves = getListCellToMoves(currentCell, homeCell);
-            cell.isNotFull(this);
             for (Cell cell : listCellToMoves) {
                 if (cell.isNotFull(this)) {
                     nextCell = cell;
@@ -164,7 +160,6 @@ public abstract class Animal implements Comparable<Animal> {
             this.isFree = true;
         }
     }
-
 
     /**
      * Метод еды Травоядных, у Хищников переопределен
@@ -239,7 +234,6 @@ public abstract class Animal implements Comparable<Animal> {
         animal.getCell().remove(animal, "Animal dead() ");
     }
 
-
     public boolean isFree() {
         return isFree;
     }
@@ -252,8 +246,7 @@ public abstract class Animal implements Comparable<Animal> {
      * уменьшение обшего количества животных данного вида
      * оставлено для создания быстрой общей статистики.
      */
-    public void decrement() {
-    }
+    public void decrement() {}
 
     public static AtomicInteger getCount() {
         return count;
