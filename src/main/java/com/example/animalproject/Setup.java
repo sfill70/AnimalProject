@@ -2,7 +2,7 @@ package com.example.animalproject;
 
 public class Setup {
     private static final boolean IS_MULTI_THREAD = true;
-    private static final int X = 100;
+    private static final int X = 40;
     private static final int Y = 20;
     private final static int CORES = Runtime.getRuntime().availableProcessors();
     private final static int TIME_OUT = 4000;

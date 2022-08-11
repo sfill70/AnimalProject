@@ -31,12 +31,14 @@ public class IslandSingleton {
         }
         return instance;
     }
+
     public Cell[][] getArrayCell() {
         return arrayCell;
     }
 
-   /**
-    * метод добавления статистики из локации в оющую статистику*/
+    /**
+     * метод добавления статистики из локации в оющую статистику
+     */
     public static void addStatistic(Class<?> clazz, Integer amount) {
         synchronized (mapStatisticResidents) {
             if (mapStatisticResidents.containsKey(clazz)) {
@@ -49,7 +51,8 @@ public class IslandSingleton {
     }
 
     /**
-     * метод получения общей статистики*/
+     * метод получения общей статистики
+     */
     public String viewStatistic() {
         StringBuffer sb = new StringBuffer();
         for (Class<?> clazz : mapStatisticResidents.keySet()
@@ -59,6 +62,7 @@ public class IslandSingleton {
         }
         return sb.toString();
     }
+
     public static String getStatistic() {
         StringBuffer sb = new StringBuffer();
         for (Class<?> clazz : mapStatisticResidents.keySet()
@@ -154,7 +158,7 @@ public class IslandSingleton {
         for (int i = 0; i < arrayCell.length; i++) {
             for (int j = 0; j < arrayCell[0].length; j++) {
                 arrayCell[i][j].reproduceCellAnimal();
-                for (Class<?> animalClazz :arrayCell[i][j].getMapCountResidents().keySet()){
+                for (Class<?> animalClazz : arrayCell[i][j].getMapCountResidents().keySet()) {
                     addStatistic(animalClazz, arrayCell[i][j].getMapCountResidents().get(animalClazz));
                 }
             }
