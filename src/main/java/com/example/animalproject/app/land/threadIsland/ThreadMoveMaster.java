@@ -41,7 +41,7 @@ public class ThreadMoveMaster implements Runnable {
             executorService.shutdown();
             boolean done;
             try {
-                done = executorService.awaitTermination(500, TimeUnit.MILLISECONDS);
+                done = executorService.awaitTermination(Setup.getTIME_OUT(), TimeUnit.MILLISECONDS);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }

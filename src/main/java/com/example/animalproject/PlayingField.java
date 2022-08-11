@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 public class PlayingField extends Application {
     private static final String title = "Island";
     boolean isMuliThread = Setup.isIS_MULTI_THREAD();
-    private static long timeOut = 800;
+
     /**
      * ширина
      */
@@ -29,13 +29,8 @@ public class PlayingField extends Application {
      * высота
      */
     private static final int sizeY = Setup.getY();
-
     private boolean isStart;
     private static final IslandSingleton ISLAND_SINGLETON = IslandSingleton.getInstance();
-
-    public static long getTimeOut() {
-        return timeOut;
-    }
 
     public static int getSizeX() {
         return sizeX;

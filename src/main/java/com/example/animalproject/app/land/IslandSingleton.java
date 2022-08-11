@@ -97,7 +97,7 @@ public class IslandSingleton {
         executorService.shutdown();
         final boolean done;
         try {
-            done = executorService.awaitTermination(PlayingField.getTimeOut(), TimeUnit.MILLISECONDS);
+            done = executorService.awaitTermination(Setup.getTIME_OUT(), TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
