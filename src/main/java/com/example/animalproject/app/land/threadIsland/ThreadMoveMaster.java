@@ -1,6 +1,7 @@
 package com.example.animalproject.app.land.threadIsland;
 
 import com.example.animalproject.PlayingField;
+import com.example.animalproject.Setup;
 import com.example.animalproject.app.land.Cell;
 import com.example.animalproject.app.land.IslandSingleton;
 import com.example.animalproject.app.land.residents.Animal;
@@ -27,7 +28,7 @@ public class ThreadMoveMaster implements Runnable {
     @Override
     public void run() {
         for (int j = 0; j < arrayCell.length; j++) {
-            ExecutorService executorService = Executors.newFixedThreadPool(5);
+            ExecutorService executorService = Executors.newFixedThreadPool(Setup.getCORES());
             Set<? extends Animal> animalSet = islandSingleton.getArrayCell()[intX][j].getSetResidents();
             for (Animal an : animalSet
             ) {
@@ -38,15 +39,15 @@ public class ThreadMoveMaster implements Runnable {
                 }
             }
             executorService.shutdown();
-           /* boolean done;
+            boolean done;
             try {
-                done = executorService.awaitTermination(100, TimeUnit.MILLISECONDS);
+                done = executorService.awaitTermination(500, TimeUnit.MILLISECONDS);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
             if (done) {
                 executorService.shutdownNow();
-            }*/
+            }
         }
     }
 }

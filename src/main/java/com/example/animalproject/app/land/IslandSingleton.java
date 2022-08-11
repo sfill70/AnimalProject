@@ -1,6 +1,7 @@
 package com.example.animalproject.app.land;
 
 import com.example.animalproject.PlayingField;
+import com.example.animalproject.Setup;
 import com.example.animalproject.app.land.residents.Animal;
 import com.example.animalproject.app.land.threadIsland.ThreadClean;
 import com.example.animalproject.app.land.threadIsland.ThreadMoveMaster;
@@ -126,7 +127,7 @@ public class IslandSingleton {
      * многопоточный метод перемешения животных в локации
      */
     public void movesThread() {
-        ExecutorService executorService = Executors.newFixedThreadPool(5);
+        ExecutorService executorService = Executors.newFixedThreadPool(Setup.getCORES());
         for (int i = 0; i < arrayCell.length; i++) {
             ThreadMoveMaster threadMoveMaster = new ThreadMoveMaster(arrayCell[i], i);
             executorService.execute(threadMoveMaster);
@@ -134,7 +135,7 @@ public class IslandSingleton {
         executorService.shutdown();
         boolean done;
         try {
-            done = executorService.awaitTermination(200, TimeUnit.MILLISECONDS);
+            done = executorService.awaitTermination(1000, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
