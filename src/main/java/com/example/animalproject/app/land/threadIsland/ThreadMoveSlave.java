@@ -17,7 +17,7 @@ public class ThreadMoveSlave implements Runnable{
     public void run() {
         animal.move();
         try {
-            Thread.sleep(4);
+            Thread.sleep(0);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

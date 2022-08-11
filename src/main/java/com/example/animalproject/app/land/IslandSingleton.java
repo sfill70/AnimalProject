@@ -115,13 +115,7 @@ public class IslandSingleton {
                 for (Animal an : animalSet
                 ) {
                     if (an.isMove()) {
-                        /*if (an.getClass().getSimpleName().equals(Bear.class.getSimpleName())) {
-                            System.out.println(an.getName() + "-" + arrayCell[i][j] + "Start!!");
-                        }*/
                         an.move();
-                        /*if (an.getClass().getSimpleName().equals(Bear.class.getSimpleName())) {
-                            System.out.println(an.getCell() + "-" + "Finish!!");
-                        }*/
                     }
                 }
             }
@@ -140,7 +134,7 @@ public class IslandSingleton {
         executorService.shutdown();
         boolean done;
         try {
-            done = executorService.awaitTermination(100, TimeUnit.MILLISECONDS);
+            done = executorService.awaitTermination(200, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
