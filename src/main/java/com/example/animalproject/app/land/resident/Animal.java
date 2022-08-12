@@ -64,7 +64,7 @@ public abstract class Animal implements Comparable<Animal> {
     }
 
     /**
-     * Метод получения окружающих Локации нужен если реализовать многоходовый режим животного
+     * Метод получения окружающих Локации нужен если реализовать многоходовый режим животного,
      * возвращает отсортированный в по food List (сортировка по убыванию) или в случайном порядке.
      * Используется!.
      */
@@ -82,7 +82,7 @@ public abstract class Animal implements Comparable<Animal> {
         cellList.remove(previousCell);
         cellList.remove(homeCell);
         cellList.sort(cellComparator);
-        /**Закоментировать следующую строку для сортировки по убыванию*/
+        /*Закоментировать следующую строку для сортировки по убыванию*/
         Collections.shuffle(cellList);
         return cellList;
     }
@@ -90,7 +90,8 @@ public abstract class Animal implements Comparable<Animal> {
     /**
      * Животное попадает в локацию со свободными местами,
      * если наелось остается, если голодное идет дальше, если свободных локаций в близи нет,
-     * остается на месте. Для хищников не переопределялся.
+     * остается на месте. Максимальное число ходов - скорость животного
+     * Для хищников не переопределялся.
      * Животное сразу удаляется из локации, что бы не быть захваченым другими потоками.
      * и по окончании кормления добовляется в выбранную локацию.
      * излишний контроль, в Cell add() и remove() все уже есть
@@ -141,12 +142,12 @@ public abstract class Animal implements Comparable<Animal> {
             return;
         }
         int difference = getFoodConsumption() - getDegreeOfSaturation();
-        if (this.cell.getFoodHerbivore().get() >= difference) {
-            this.cell.setFoodHerbivore(this.cell.getFoodHerbivore().get() - difference);
+        if (cell.getFoodHerbivore().get() >= difference) {
+            cell.setFoodHerbivore(cell.getFoodHerbivore().get() - difference);
             setDegreeOfSaturation(getFoodConsumption());
         } else {
-            setDegreeOfSaturation(getDegreeOfSaturation() + this.cell.getFoodHerbivore().get());
-            this.cell.setFoodHerbivore(0);
+            setDegreeOfSaturation(getDegreeOfSaturation() + cell.getFoodHerbivore().get());
+            cell.setFoodHerbivore(0);
         }
     }
 

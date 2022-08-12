@@ -81,7 +81,7 @@ public class PlayingField extends Application {
         for (int i = 0; i < number; i++) {
                 if (isMuliThread) {
                     ISLAND_SINGLETON.movesThread();
-                    ISLAND_SINGLETON.clearAndReproduceThread();
+                    ISLAND_SINGLETON.clearAndReproduce();
                 } else {
                     ISLAND_SINGLETON.moves();
                     ISLAND_SINGLETON.clearAndReproduceThread();

@@ -131,10 +131,12 @@ public class Cell extends Rectangle {
         }
     }
 
+    /**
+     * Метод генерации животного по переданному классу*/
     @NotNull
     private Animal getAnimal(Class<? extends Animal> animalClazz) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
-        Class<? extends Animal> aClass = animalClazz;
-        Constructor<?> animalConstructor = aClass.getConstructor();
+        Class<? extends Animal> clazz = animalClazz;
+        Constructor<?> animalConstructor = clazz.getConstructor();
         Animal animalAny = (Animal) animalConstructor.newInstance();
         animalAny.setCell(this);
         return animalAny;

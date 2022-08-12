@@ -36,7 +36,7 @@ public class IslandSingleton {
     /**
      * метод добавления статистики из локации в оющую статистику
      */
-    public static void addStatistic(Class<?> clazz, Integer amount) {
+    public static void addStatistic(Class<?> clazz, int amount) {
         synchronized (mapStatisticResidents) {
             if (mapStatisticResidents.containsKey(clazz)) {
                 mapStatisticResidents.put(clazz,
@@ -125,7 +125,7 @@ public class IslandSingleton {
         executorService.shutdown();
         boolean done;
         try {
-            done = executorService.awaitTermination(1000, TimeUnit.MILLISECONDS);
+            done = executorService.awaitTermination(Setup.getTIME_OUT(), TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
