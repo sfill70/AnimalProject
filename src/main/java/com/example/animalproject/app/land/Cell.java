@@ -80,7 +80,7 @@ public class Cell extends Rectangle {
                 int amount = UTIL_ANIMAL.getMapAmountAnimal().get(animalClazz) / 4
                         * ThreadLocalRandom.current().nextInt(70, 100) / 100;
                 for (int i = 0; i < amount; i++) {
-                    Animal animal = animalAny.reproduce(animalAny);
+                    Animal animal = animalAny.reproduce(animalAny.getCell());
                 }
                 IslandSingleton.addStatistic(aClass, 1 + amount);
 
@@ -134,7 +134,7 @@ public class Cell extends Rectangle {
                     if (!this.isNotFull(animalAny)) {
                         break;
                     }
-                    animalAny.reproduce(animalAny);
+                    animalAny.reproduce(animalAny.getCell());
                 }
 
 

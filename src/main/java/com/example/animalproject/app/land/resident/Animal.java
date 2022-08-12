@@ -209,7 +209,15 @@ public abstract class Animal implements Comparable<Animal> {
     /**
      * Создание животного и добавление его в локацию
      */
-    public <T extends Animal> T reproduce(T animal) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+ /*   public <T extends Animal> T reproduce(T animal) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        Constructor<?> animalConstructor = animal.getClass().getConstructor();
+        T animalAny = (T) animalConstructor.newInstance();
+        animalAny.setCell(animal.getCell());
+        animal.getCell().add(animalAny);
+        return animalAny;
+    }*/
+
+    public <T extends Animal> T reproduce(Cell cell) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         Constructor<?> animalConstructor = animal.getClass().getConstructor();
         T animalAny = (T) animalConstructor.newInstance();
         animalAny.setCell(animal.getCell());
