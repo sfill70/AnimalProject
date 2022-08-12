@@ -29,16 +29,16 @@ public class Cell extends Rectangle {
     int weightHerbivores;
     final static UtilAnimal UTIL_ANIMAL = new UtilAnimal();
 
-    public final ConcurrentHashMap<String, Integer> mapResidents = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, Integer> mapResidents = new ConcurrentHashMap<>();
     /**
      * Map количество особей каждого вида
      */
-    /*final*/ public ConcurrentHashMap<Class<?>, Integer> mapCountResidents = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Class<?>, Integer> mapCountResidents = new ConcurrentHashMap<>();
 
     /**
      * Спмсок всеж животных в Локации
      */
-    public final Set<Animal> setResidents = ConcurrentHashMap.newKeySet();
+    private final Set<Animal> setResidents = ConcurrentHashMap.newKeySet();
 
     public Cell() {
     }
@@ -92,9 +92,7 @@ public class Cell extends Rectangle {
                 throw new RuntimeException(e);
             } catch (NoSuchMethodException e) {
                 throw new RuntimeException(e);
-            } /*catch (NoSuchFieldException e) {
-                e.printStackTrace();
-            }*/
+            }
         }
     }
 
