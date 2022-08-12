@@ -1,7 +1,9 @@
 package com.example.animalproject.app.land.resident.herbivore;
 
+import com.example.animalproject.app.land.Cell;
 import com.example.animalproject.app.land.UtilAnimal;
 import com.example.animalproject.app.land.resident.Animal;
+import com.example.animalproject.app.land.resident.predator.Eagle;
 
 public class Boar extends Herbivore {
     static {
@@ -17,16 +19,11 @@ public class Boar extends Herbivore {
         this.degreeOfSaturation = 0;
     }
 
-    public int getFoodConsumption() {
-        return foodConsumption;
-    }
-
-    public void setFoodConsumption(int foodConsumption) {
-        this.foodConsumption = foodConsumption;
-    }
-
     @Override
-    public Animal madeNewAnimal() {
-        return new Boar();
+    public Animal reproduce(Cell cell) {
+        Boar animal = new Boar();
+        animal.setCell(cell);
+        cell.add(animal);
+        return animal;
     }
 }

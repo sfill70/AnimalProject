@@ -4,8 +4,6 @@ import com.example.animalproject.PlayingField;
 import com.example.animalproject.app.land.Cell;
 import com.example.animalproject.app.land.UtilAnimal;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadLocalRandom;
@@ -35,21 +33,26 @@ public abstract class Animal implements Comparable<Animal> {
     public String icon;
     public String name;
     public Cell cell;
-    public Animal animal = this;
     public int sizeX = PlayingField.getSizeX();
     public int sizeY = PlayingField.getSizeY();
 
     /**
      * Map для хранения Шанс съесть животное
      */
-//    public static ConcurrentHashMap<String, Integer> chanceSuccessfulHunt = new ConcurrentHashMap<>();
     public static ConcurrentHashMap<Class<?>, Integer> chanceSuccessfulHunt = new ConcurrentHashMap<>();
 
     public Animal() {
         count.incrementAndGet();
-        this.name = animal.getClass().getSimpleName() + "-" + count.get() *
+        this.name = this.getClass().getSimpleName() + "-" + count.get() *
                 31 * ThreadLocalRandom.current().nextInt(50, 100);
     }
+
+    /**
+     * Абстрактный метод создания животного и добавления в переданную локацию
+     * переопределяется в классах животных.
+     */
+    public abstract Animal reproduce(Cell cell);
+
 
     /**
      * Метод получения координат, при выходе за край острова, переносит координату
@@ -61,43 +64,13 @@ public abstract class Animal implements Comparable<Animal> {
     }
 
     /**
-     * Метод получения доступных локаций на расстоянии speed от текщей локации,
-     * квадратная канва из локаций размером = speed+1, возвращает отсортированный по food в порядке убывания
-     * List.
-     * Не используется
-     */
-    public List<Cell> getListCellToMoves(int speed) {
-        Comparator<Cell> cellComparator = (o1, o2) -> Integer.compare(o2.getFoodHerbivore().get(),
-                o1.getFoodHerbivore().get());
-        List<Cell> cellList = new ArrayList<>();
-        Cell cell = this.cell;
-        int x = cell.getIntX();
-        int y = cell.getIntY();
-        for (int i = x - speed; i <= x + speed; i++) {
-            cellList.add(PlayingField.getIsland().getArrayCell()[getCoordinates(i, sizeY)][getCoordinates(x - speed, sizeX)]);
-            cellList.add(PlayingField.getIsland().getArrayCell()[getCoordinates(i, sizeY)][getCoordinates(x + speed, sizeX)]);
-        }
-        for (int j = y + 1 - speed; j <= y - 1 + speed; j++) {
-            cellList.add(PlayingField.getIsland().getArrayCell()[getCoordinates(y - speed, sizeY)][getCoordinates(j, sizeX)]);
-            cellList.add(PlayingField.getIsland().getArrayCell()[getCoordinates(y + speed, sizeY)][getCoordinates(j, sizeX)]);
-        }
-        cellList.remove(cell);
-        cellList.sort(cellComparator);
-        return cellList;
-    }
-
-    /**
      * Метод получения окружающих Локации нужен если реализовать многоходовый режим животного
      * возвращает отсортированный в по food List (сортировка по убыванию) или в случайном порядке.
      * Используется!.
      */
     public List<Cell> getListCellToMoves(Cell previousCell, Cell homeCell) {
-        Comparator<Cell> cellComparator = new Comparator<Cell>() {
-            @Override
-            public int compare(Cell o1, Cell o2) {
-                return Integer.compare(o2.getFoodHerbivore().get(), o1.getFoodHerbivore().get());
-            }
-        };
+        Comparator<Cell> cellComparator = (o1, o2) ->
+                Integer.compare(o2.getFoodHerbivore().get(), o1.getFoodHerbivore().get());
         List<Cell> cellList = new ArrayList<>();
         int x = previousCell.getIntX();
         int y = previousCell.getIntY();
@@ -130,7 +103,7 @@ public abstract class Animal implements Comparable<Animal> {
         homeCell.remove(this, "Animal move Home");
         int speed = UtilAnimal.getMapSpeedAnimal().get(this.getClass());
         if (speed == 0) {
-            eat(animal.getCell());
+            eat(this.getCell());
             return;
         }
         Cell currentCell = homeCell;
@@ -198,32 +171,6 @@ public abstract class Animal implements Comparable<Animal> {
     }
 
     /**
-     * Базовый вариант создания животного. Не используется
-     */
-    public <T extends Animal> T reproduce() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchFieldException {
-        Constructor<?> animalConstructor = animal.getClass().getConstructor();
-        return (T) animalConstructor.newInstance();
-    }
-
-    /**
-     * Создание животного и добавление его в локацию
-     */
-
-    public <T extends Animal> T reproduce(Cell cell) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
-        Constructor<?> animalConstructor = animal.getClass().getConstructor();
-        T animalAny = (T) animalConstructor.newInstance();
-        animalAny.setCell(animal.getCell());
-        animal.getCell().add(animalAny);
-        return animalAny;
-    }
-
-    /**
-     * Другой вариант создания животного. Реализован в наследниках.
-     * Не используется
-     */
-    public abstract Animal madeNewAnimal();
-
-    /**
      * Смерть животного удаляет животное из локации
      * String method в аргументах метода, для будущего логирования и удобства настройки
      */
@@ -242,17 +189,6 @@ public abstract class Animal implements Comparable<Animal> {
         isFree = free;
     }
 
-    /**
-     * уменьшение обшего количества животных данного вида
-     * оставлено для создания быстрой общей статистики.
-     */
-    public void decrement() {
-    }
-
-    public static AtomicInteger getCount() {
-        return count;
-    }
-
     public int getDegreeOfSaturation() {
         return degreeOfSaturation;
     }
@@ -265,20 +201,12 @@ public abstract class Animal implements Comparable<Animal> {
         return isAive;
     }
 
-    public void setAive(boolean aive) {
-        isAive = aive;
-    }
-
     public boolean isMove() {
         return isMove;
     }
 
     public void setMove(boolean move) {
         isMove = move;
-    }
-
-    public static void setCount(AtomicInteger count) {
-        Animal.count = count;
     }
 
     public int getWeight() {
@@ -325,10 +253,9 @@ public abstract class Animal implements Comparable<Animal> {
         return result;
     }
 
-
     @Override
     public String toString() {
-        return animal.getClass().getSimpleName() + " {" + "icon='" + icon + '\'' + ", name='" + name + '\'' + '}';
+        return this.getClass().getSimpleName() + " {" + "icon='" + icon + '\'' + ", name='" + name + '\'' + '}';
     }
 
     /*

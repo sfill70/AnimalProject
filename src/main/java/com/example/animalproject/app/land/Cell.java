@@ -2,6 +2,7 @@ package com.example.animalproject.app.land;
 
 import javafx.scene.shape.Rectangle;
 import com.example.animalproject.app.land.resident.Animal;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -63,17 +64,14 @@ public class Cell extends Rectangle {
         for (Class<?> animalClazz : UtilAnimal.getMapAmountAnimal().keySet()
         ) {
             try {
-                Class<? extends Animal> aClass = (Class<? extends Animal>) animalClazz;
-                Constructor<?> animalConstructor = aClass.getConstructor();
-                Animal animalAny = (Animal) animalConstructor.newInstance();
-                animalAny.setCell(this);
+                Animal animalAny = getAnimal((Class<? extends Animal>) animalClazz);
                 this.add(animalAny);
                 int amount = UtilAnimal.getMapAmountAnimal().get(animalClazz) / 4
                         * ThreadLocalRandom.current().nextInt(70, 100) / 100;
                 for (int i = 0; i < amount; i++) {
-                    Animal animal = animalAny.reproduce(animalAny.getCell());
+                    animalAny.reproduce(animalAny.getCell());
                 }
-                IslandSingleton.addStatistic(aClass, 1 + amount);
+                IslandSingleton.addStatistic(animalClazz, 1 + amount);
 
             } catch (InstantiationException e) {
                 throw new RuntimeException(e);
@@ -91,7 +89,7 @@ public class Cell extends Rectangle {
      * Метод удаления голодных животный из локации и размножения
      * излишняя проверка на удаление*/
     public void reproduceCellAnimal() {
-        setFoodHerbivore(6000 /** 100 / ThreadLocalRandom.current().nextInt(50, 100)*/);
+        setFoodHerbivore(6000 /* 100 / ThreadLocalRandom.current().nextInt(50, 100)*/);
 //        setCarrion(new AtomicInteger(0));
         setCarrion(new AtomicInteger(this.carrion.get()));
         Set<? extends Animal> animalSet = this.setResidents;
@@ -113,11 +111,7 @@ public class Cell extends Rectangle {
         for (Class<?> animalClazz : mapCountResidents.keySet()
         ) {
             try {
-                Class<? extends Animal> aClass = (Class<? extends Animal>) animalClazz;
-                Constructor<?> animalConstructor = aClass.getConstructor();
-                Animal animalAny = (Animal) animalConstructor.newInstance();
-                animalAny.setCell(this);
-                animalAny.decrement();
+                Animal animalAny = getAnimal((Class<? extends Animal>) animalClazz);
                 int amount = mapCountResidents.get(animalClazz) / 2 / UtilAnimal.getAbilityToReproduce().get(animalClazz);
                 for (int i = 0; i < amount; i++) {
                     if (!this.isNotFull(animalAny)) {
@@ -125,8 +119,6 @@ public class Cell extends Rectangle {
                     }
                     animalAny.reproduce(animalAny.getCell());
                 }
-
-
             } catch (InstantiationException e) {
                 throw new RuntimeException(e);
             } catch (IllegalAccessException e) {
@@ -137,6 +129,15 @@ public class Cell extends Rectangle {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    @NotNull
+    private Animal getAnimal(Class<? extends Animal> animalClazz) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+        Class<? extends Animal> aClass = animalClazz;
+        Constructor<?> animalConstructor = aClass.getConstructor();
+        Animal animalAny = (Animal) animalConstructor.newInstance();
+        animalAny.setCell(this);
+        return animalAny;
     }
 
     public int getIntX() {
@@ -184,8 +185,9 @@ public class Cell extends Rectangle {
 
     /**
      * метод удаления живонтого из локации.
+     * String method в аргументах метода, для будущего логирования и удобства настройки
      */
-    public void remove(Animal animal, String st) {
+    public void remove(Animal animal, String method) {
         synchronized (setResidents) {
             animal.setFree(false);
             animal.setMove(false);
@@ -195,19 +197,6 @@ public class Cell extends Rectangle {
                     mapCountResidents.put(animal.getClass(),
                             mapCountResidents.get(animal.getClass()) - 1);
                 }
-            }
-        }
-    }
-
-    /**
-     * метод удаления с помощью итератора не используется очень медленный
-     */
-    private void removeWithIterator(Animal animal) {
-        Iterator<Animal> iterator = setResidents.iterator();
-        while (iterator.hasNext()) {
-            Animal element = iterator.next();
-            if (element.equals(animal)) {
-                iterator.remove();
             }
         }
     }

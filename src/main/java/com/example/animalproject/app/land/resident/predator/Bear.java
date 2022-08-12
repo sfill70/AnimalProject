@@ -1,5 +1,6 @@
 package com.example.animalproject.app.land.resident.predator;
 
+import com.example.animalproject.app.land.Cell;
 import com.example.animalproject.app.land.UtilAnimal;
 import com.example.animalproject.app.land.resident.Animal;
 import com.example.animalproject.app.land.resident.herbivore.*;
@@ -20,12 +21,15 @@ public class Bear extends Predator {
     }
 
     public Bear() {
-        this.foodConsumption =30;
+        this.foodConsumption = 30;
         this.degreeOfSaturation = 0;
     }
 
     @Override
-    public Animal madeNewAnimal() {
-        return new Bear();
+    public Animal reproduce(Cell cell) {
+        Bear animal = new Bear();
+        animal.setCell(cell);
+        cell.add(animal);
+        return animal;
     }
 }

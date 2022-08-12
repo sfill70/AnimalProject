@@ -3,6 +3,7 @@ package com.example.animalproject.app.land.resident.herbivore;
 import com.example.animalproject.app.land.Cell;
 import com.example.animalproject.app.land.UtilAnimal;
 import com.example.animalproject.app.land.resident.Animal;
+import com.example.animalproject.app.land.resident.predator.Eagle;
 
 public class Caterpillar extends Herbivore {
 
@@ -25,22 +26,17 @@ public class Caterpillar extends Herbivore {
 
     @Override
     public void eat(Cell cell) {
-        if(cell.getFoodHerbivore().get()>1){
+        if (cell.getFoodHerbivore().get() > 1) {
             degreeOfSaturation = foodConsumption;
         }
     }
 
-    public int getFoodConsumption() {
-        return foodConsumption;
-    }
-
-    public void setFoodConsumption(int foodConsumption) {
-        this.foodConsumption = foodConsumption;
-    }
-
     @Override
-    public Animal madeNewAnimal() {
-        return new Caterpillar();
+    public Animal reproduce(Cell cell) {
+        Caterpillar animal = new Caterpillar();
+        animal.setCell(cell);
+        cell.add(animal);
+        return animal;
     }
 
 }

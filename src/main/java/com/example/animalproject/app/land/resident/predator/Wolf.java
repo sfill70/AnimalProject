@@ -1,5 +1,6 @@
 package com.example.animalproject.app.land.resident.predator;
 
+import com.example.animalproject.app.land.Cell;
 import com.example.animalproject.app.land.UtilAnimal;
 import com.example.animalproject.app.land.resident.Animal;
 import com.example.animalproject.app.land.resident.herbivore.*;
@@ -26,7 +27,10 @@ public class Wolf extends Predator {
     }
 
     @Override
-    public Animal madeNewAnimal() {
-        return new Wolf();
+    public Animal reproduce(Cell cell) {
+        Wolf wolf = new Wolf();
+        wolf.setCell(cell);
+        cell.add(wolf);
+        return wolf;
     }
 }

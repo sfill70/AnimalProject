@@ -1,7 +1,9 @@
 package com.example.animalproject.app.land.resident.herbivore;
 
+import com.example.animalproject.app.land.Cell;
 import com.example.animalproject.app.land.UtilAnimal;
 import com.example.animalproject.app.land.resident.Animal;
+import com.example.animalproject.app.land.resident.predator.Eagle;
 
 public class Mouse extends Herbivore {
 
@@ -17,17 +19,11 @@ public class Mouse extends Herbivore {
         this.degreeOfSaturation = 0;
     }
 
-
-    public int getFoodConsumption() {
-        return foodConsumption;
-    }
-
-    public void setFoodConsumption(int foodConsumption) {
-        this.foodConsumption = foodConsumption;
-    }
-
     @Override
-    public Animal madeNewAnimal() {
-        return new Mouse();
+    public Animal reproduce(Cell cell) {
+        Mouse animal = new Mouse();
+        animal.setCell(cell);
+        cell.add(animal);
+        return animal;
     }
 }

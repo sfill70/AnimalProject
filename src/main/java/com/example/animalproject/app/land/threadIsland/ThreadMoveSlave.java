@@ -1,6 +1,7 @@
 package com.example.animalproject.app.land.threadIsland;
 
 import com.example.animalproject.app.land.resident.Animal;
+import com.example.animalproject.app.land.resident.predator.Bear;
 
 public class ThreadMoveSlave implements Runnable {
     static int count;
@@ -18,3 +19,7 @@ public class ThreadMoveSlave implements Runnable {
         animal.move();
     }
 }
+
+/*if (animal.getClass().getSimpleName().equals(Bear.class.getSimpleName())) {
+        System.out.println(animal.getName() + "-" + animal.getCell());
+        }*/

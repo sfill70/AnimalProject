@@ -1,7 +1,9 @@
 package com.example.animalproject.app.land.resident.herbivore;
 
+import com.example.animalproject.app.land.Cell;
 import com.example.animalproject.app.land.UtilAnimal;
 import com.example.animalproject.app.land.resident.Animal;
+import com.example.animalproject.app.land.resident.predator.Eagle;
 
 public class Goat extends Herbivore {
 
@@ -18,7 +20,10 @@ public class Goat extends Herbivore {
     }
 
     @Override
-    public Animal madeNewAnimal() {
-        return new Goat();
+    public Animal reproduce(Cell cell) {
+        Goat animal = new Goat();
+        animal.setCell(cell);
+        cell.add(animal);
+        return animal;
     }
 }
