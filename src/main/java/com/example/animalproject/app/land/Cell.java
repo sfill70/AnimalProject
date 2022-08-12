@@ -22,19 +22,10 @@ public class Cell extends Rectangle {
      * Остатки травоядных после съедания хищником (падаль)
      */
     volatile AtomicInteger carrion;
-
-    /**
-     * Общий вес Травоядных
-     */
-    int weightHerbivores;
-    final static UtilAnimal UTIL_ANIMAL = new UtilAnimal();
-
-    private final ConcurrentHashMap<String, Integer> mapResidents = new ConcurrentHashMap<>();
     /**
      * Map количество особей каждого вида
      */
     private final ConcurrentHashMap<Class<?>, Integer> mapCountResidents = new ConcurrentHashMap<>();
-
     /**
      * Спмсок всеж животных в Локации
      */
@@ -69,7 +60,7 @@ public class Cell extends Rectangle {
     public void initialization() {
         this.foodHerbivore = new AtomicInteger(100000);
         this.carrion = new AtomicInteger(0);
-        for (Class<?> animalClazz : UTIL_ANIMAL.getMapAmountAnimal().keySet()
+        for (Class<?> animalClazz : UtilAnimal.getMapAmountAnimal().keySet()
         ) {
             try {
                 Class<? extends Animal> aClass = (Class<? extends Animal>) animalClazz;
@@ -77,7 +68,7 @@ public class Cell extends Rectangle {
                 Animal animalAny = (Animal) animalConstructor.newInstance();
                 animalAny.setCell(this);
                 this.add(animalAny);
-                int amount = UTIL_ANIMAL.getMapAmountAnimal().get(animalClazz) / 4
+                int amount = UtilAnimal.getMapAmountAnimal().get(animalClazz) / 4
                         * ThreadLocalRandom.current().nextInt(70, 100) / 100;
                 for (int i = 0; i < amount; i++) {
                     Animal animal = animalAny.reproduce(animalAny.getCell());
@@ -107,7 +98,7 @@ public class Cell extends Rectangle {
         for (Animal an : animalSet
         ) {
             if (an.getDegreeOfSaturation() <= 0) {
-                an.dead(an, "Ctll ReproduceCellAnimal()_1");
+                an.dead(an, "Cell ReproduceCellAnimal() isDead_1");
             }
             if (an.isAive()) {
                 an.setMove(true);
@@ -116,7 +107,7 @@ public class Cell extends Rectangle {
 
             } else {
                 this.getSetResidents().remove(an);
-                an.getCell().remove(an, "clearAndReproduce() is isDead_2");
+                an.getCell().remove(an, "Cell clearAndReproduce() isDead_2");
             }
         }
         for (Class<?> animalClazz : mapCountResidents.keySet()
@@ -152,16 +143,8 @@ public class Cell extends Rectangle {
         return intX;
     }
 
-    public void setIntX(int x) {
-        this.intX = x;
-    }
-
     public int getIntY() {
         return intY;
-    }
-
-    public void setIntY(int intY) {
-        this.intY = intY;
     }
 
     public AtomicInteger getFoodHerbivore() {
@@ -178,14 +161,6 @@ public class Cell extends Rectangle {
 
     public void setCarrion(AtomicInteger carrion) {
         this.carrion = carrion;
-    }
-
-    public int getWeightHerbivores() {
-        return weightHerbivores;
-    }
-
-    public void setWeightHerbivores(int weightHerbivores) {
-        this.weightHerbivores = weightHerbivores;
     }
 
     /**
@@ -254,16 +229,14 @@ public class Cell extends Rectangle {
             amount = mapCountResidents.get(animal.getClass());
         }
 
-        return UTIL_ANIMAL.isNotFull(animal, amount);
+        return UtilAnimal.isNotFull(animal, amount);
     }
-
 
     @Override
     public String toString() {
         return "Cell{" +
                 "x=" + intX +
-                ", y=" + intY + ", foodHerbivore = " + foodHerbivore + ", carrion = " + carrion + "} "   /*+ ", Set=" + setResidents +
-                '}'*/;
+                ", y=" + intY + ", foodHerbivore = " + foodHerbivore + ", carrion = " + carrion + "}";
     }
 
 }

@@ -22,9 +22,8 @@ public abstract class Animal implements Comparable<Animal> {
      * общее количество животных данного вида
      * оставлено для создания быстрой общей статистики.
      */
-    static volatile AtomicInteger count = new AtomicInteger(0);
+    static private volatile AtomicInteger count = new AtomicInteger(0);
     public int weight;
-    public int speed;
     /**
      * потребление пищи
      */
@@ -48,7 +47,8 @@ public abstract class Animal implements Comparable<Animal> {
 
     public Animal() {
         count.incrementAndGet();
-        this.name = animal.getClass().getSimpleName() + "-" + count.get() * ThreadLocalRandom.current().nextInt(50, 100);
+        this.name = animal.getClass().getSimpleName() + "-" + count.get() *
+                31 * ThreadLocalRandom.current().nextInt(50, 100);
     }
 
     /**
@@ -155,7 +155,6 @@ public abstract class Animal implements Comparable<Animal> {
             this.isFree = true;
         } else {
             this.isMove = false;
-            this.setCell(homeCell);
             homeCell.add(this);
             this.isFree = true;
         }
@@ -247,7 +246,8 @@ public abstract class Animal implements Comparable<Animal> {
      * уменьшение обшего количества животных данного вида
      * оставлено для создания быстрой общей статистики.
      */
-    public void decrement() {}
+    public void decrement() {
+    }
 
     public static AtomicInteger getCount() {
         return count;
@@ -295,14 +295,6 @@ public abstract class Animal implements Comparable<Animal> {
 
     public void setFoodConsumption(int foodConsumption) {
         this.foodConsumption = foodConsumption;
-    }
-
-    public String getIcon() {
-        return icon;
-    }
-
-    public void setIcon(String icon) {
-        this.icon = icon;
     }
 
     public String getName() {

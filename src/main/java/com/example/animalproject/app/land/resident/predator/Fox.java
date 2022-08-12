@@ -5,11 +5,7 @@ import com.example.animalproject.app.land.resident.Animal;
 import com.example.animalproject.app.land.resident.herbivore.Mouse;
 import com.example.animalproject.app.land.resident.herbivore.Rabbit;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 public class Fox extends Predator {
-
-    public static volatile AtomicInteger count = new AtomicInteger(0);
 
     static {
         UtilAnimal.putMapAmountAnimal(Fox.class, 40);
@@ -20,7 +16,6 @@ public class Fox extends Predator {
     }
 
     public Fox() {
-        count.incrementAndGet();
         this.foodConsumption = 2;
         this.degreeOfSaturation = 0;
     }
@@ -28,19 +23,5 @@ public class Fox extends Predator {
     @Override
     public Animal madeNewAnimal() {
         return new Fox();
-    }
-
-    public void decrement(){
-        Fox.count.decrementAndGet();
-        Predator.count.decrementAndGet();
-        Animal.getCount().decrementAndGet();
-    }
-
-    public static AtomicInteger getCount() {
-        return count;
-    }
-
-    public static void setCount(AtomicInteger count) {
-        count = count;
     }
 }

@@ -1,8 +1,7 @@
 package com.example.animalproject.app.land.resident.herbivore;
+
 import com.example.animalproject.app.land.UtilAnimal;
 import com.example.animalproject.app.land.resident.Animal;
-
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class Boar extends Herbivore {
     static {
@@ -11,29 +10,11 @@ public class Boar extends Herbivore {
         UtilAnimal.putSpeedAnimal(Boar.class, 2);
         UtilAnimal.putAbilityToReproduce(Boar.class, 1);
     }
-    static volatile AtomicInteger count = new AtomicInteger(0);
-
-
 
     public Boar() {
-        count.incrementAndGet();
         this.weight = 50;
         this.foodConsumption = 50;
         this.degreeOfSaturation = 0;
-    }
-
-    public void decrement(){
-        Boar.count.decrementAndGet();
-        Herbivore.count.decrementAndGet();
-        Animal.getCount().decrementAndGet();
-    }
-
-    public static AtomicInteger getCount() {
-        return count;
-    }
-
-    public static void setCount(AtomicInteger count) {
-        count = count;
     }
 
     public int getFoodConsumption() {

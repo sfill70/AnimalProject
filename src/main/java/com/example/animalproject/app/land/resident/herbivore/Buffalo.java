@@ -3,10 +3,7 @@ package com.example.animalproject.app.land.resident.herbivore;
 import com.example.animalproject.app.land.UtilAnimal;
 import com.example.animalproject.app.land.resident.Animal;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 public class Buffalo extends Herbivore {
-    static volatile AtomicInteger count = new AtomicInteger(0);
 
     static {
         UtilAnimal.putMapAmountAnimal(Buffalo.class, 10);
@@ -15,24 +12,9 @@ public class Buffalo extends Herbivore {
     }
 
     public Buffalo() {
-        count.incrementAndGet();
         this.weight = 700;
         this.foodConsumption = 100;
         this.degreeOfSaturation = 0;
-    }
-
-    public void decrement(){
-        Buffalo.count.decrementAndGet();
-        Herbivore.count.decrementAndGet();
-        Animal.getCount().decrementAndGet();
-    }
-
-    public static AtomicInteger getCount() {
-        return count;
-    }
-
-    public static void setCount(AtomicInteger count) {
-        count = count;
     }
 
     public int getFoodConsumption() {

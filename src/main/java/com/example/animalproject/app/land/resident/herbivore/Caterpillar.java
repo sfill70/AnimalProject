@@ -4,10 +4,7 @@ import com.example.animalproject.app.land.Cell;
 import com.example.animalproject.app.land.UtilAnimal;
 import com.example.animalproject.app.land.resident.Animal;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 public class Caterpillar extends Herbivore {
-    static volatile AtomicInteger count = new AtomicInteger(0);
 
     static {
         UtilAnimal.putMapAmountAnimal(Caterpillar.class, 1000);
@@ -16,7 +13,6 @@ public class Caterpillar extends Herbivore {
     }
 
     public Caterpillar() {
-        count.incrementAndGet();
         this.weight = 1;
         this.foodConsumption = 1;
         this.degreeOfSaturation = 1;
@@ -30,24 +26,8 @@ public class Caterpillar extends Herbivore {
     @Override
     public void eat(Cell cell) {
         if(cell.getFoodHerbivore().get()>1){
-//            cell.setFood(cell.getFood().get()-1);
             degreeOfSaturation = foodConsumption;
         }
-    }
-
-    public void decrement(){
-        Caterpillar.count.decrementAndGet();
-        Herbivore.count.decrementAndGet();
-        Animal.getCount().decrementAndGet();
-    }
-
-
-    public static AtomicInteger getCount() {
-        return count;
-    }
-
-    public static void setCount(AtomicInteger count) {
-        count = count;
     }
 
     public int getFoodConsumption() {
