@@ -1,6 +1,5 @@
 package com.example.animalproject;
 
-import com.example.animalproject.app.land.UtilAnimal;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -19,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class PlayingField extends Application {
     private static final String title = "Island";
-    boolean isMuliThread = Setup.isIS_MULTI_THREAD();
+    boolean isMultiThread = Setup.isIS_MULTI_THREAD();
 
     /**
      * ширина
@@ -29,17 +28,13 @@ public class PlayingField extends Application {
      * высота
      */
     private static final int sizeY = Setup.getY();
-    private boolean isStart;
     private static final IslandSingleton ISLAND_SINGLETON = IslandSingleton.getInstance();
-
     public static int getSizeX() {
         return sizeX;
     }
-
     public static int getSizeY() {
         return sizeY;
     }
-
     public static IslandSingleton getIsland() {
         return ISLAND_SINGLETON;
     }
@@ -49,18 +44,17 @@ public class PlayingField extends Application {
     }
 
     private ScrollPane buildGrid() {
-        if (isMuliThread) {
+        if (isMultiThread) {
             ISLAND_SINGLETON.initializationThread();
         } else {
             ISLAND_SINGLETON.initialization();
         }
-        isStart = true;
         Group panel = new Group();
         for (int y = 0; y != sizeY; y++) {
             for (int x = 0; x != sizeX; x++) {
                 Cell rect = this.buildRectangle(x, y, 15, ISLAND_SINGLETON.getArrayCell()[y][x]);
                 panel.getChildren().add(rect);
-                rect.setOnMouseClicked(this.buildMouseEvent(panel, rect.viewResidents()));
+                rect.setOnMouseClicked(this.buildMouseEvent(rect.viewResidents()));
             }
         }
         return new ScrollPane(panel);
@@ -79,26 +73,15 @@ public class PlayingField extends Application {
             number = 1;
         }
         for (int i = 0; i < number; i++) {
-                if (isMuliThread) {
-                    ISLAND_SINGLETON.movesThread();
-                    ISLAND_SINGLETON.clearAndReproduce();
-                } else {
-                    ISLAND_SINGLETON.moves();
-                    ISLAND_SINGLETON.clearAndReproduceThread();
-                }
+            if (isMultiThread) {
+                ISLAND_SINGLETON.movesThread();
+                ISLAND_SINGLETON.clearAndReproduce();
+            } else {
+                ISLAND_SINGLETON.moves();
+                ISLAND_SINGLETON.clearAndReproduceThread();
+            }
         }
         return rendering();
-    }
-
-    private Cell buildRectangle2(int x, int y, int size) {
-        Cell rect = new Cell(x, y);
-        rect.setX(x * size);
-        rect.setY(y * size);
-        rect.setHeight(size);
-        rect.setWidth(size);
-        rect.setFill(Color.CORAL);
-        rect.setStroke(Color.BLACK);
-        return rect;
     }
 
     private Cell buildRectangle(int x, int y, int size, Cell cell) {
@@ -120,24 +103,7 @@ public class PlayingField extends Application {
         alert.showAndWait();
     }
 
-    private void showInfo(String message) {
-        try {
-            int number = Integer.parseInt(message);
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Население");
-            alert.setHeaderText(null);
-            alert.setContentText(message);
-            alert.showAndWait();
-        } catch (NumberFormatException e) {
-            Alert error = new Alert(Alert.AlertType.INFORMATION);
-            error.setTitle("Error");
-            error.setHeaderText("wrong actions");
-            error.setContentText("Enter number");
-            error.showAndWait();
-        }
-    }
-
-    private EventHandler<MouseEvent> buildMouseEvent(Group panel, String st) {
+    private EventHandler<MouseEvent> buildMouseEvent(String st) {
         return event -> {
             Cell rect = (Cell) event.getTarget();
             rect.setFill(Color.AQUA);
@@ -149,7 +115,6 @@ public class PlayingField extends Application {
         this.showAlert(st);
     }
 
-
     @NotNull
     private ScrollPane rendering() {
         Group panel = new Group();
@@ -159,7 +124,7 @@ public class PlayingField extends Application {
                 rect.setFill(Color.CORAL);
                 rect.setStroke(Color.BLACK);
                 panel.getChildren().add(rect);
-                rect.setOnMouseClicked(this.buildMouseEvent(panel, rect.viewResidents()/*rect.getSetResidents().toString()*/));
+                rect.setOnMouseClicked(this.buildMouseEvent(rect.viewResidents()));
             }
         }
         return new ScrollPane(panel);
@@ -172,7 +137,6 @@ public class PlayingField extends Application {
         pane.setHgap(5);
         return pane;
     }
-
 
     @Override
     public void start(Stage stage) {
@@ -196,7 +160,6 @@ public class PlayingField extends Application {
         );
         Button statistics = new Button("Statistics");
         statistics.setOnMouseClicked(
-//                event -> statistic(UtilAnimal.getStatistic()));
                 event -> statistic(ISLAND_SINGLETON.viewStatistic()));
 
         FlowPane generalFlowPane = new FlowPane();
@@ -215,4 +178,4 @@ public class PlayingField extends Application {
         stage.setResizable(false);
         stage.show();
     }
-     }
+}
