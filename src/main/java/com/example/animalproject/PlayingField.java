@@ -118,9 +118,9 @@ public class PlayingField extends Application {
     @NotNull
     private ScrollPane rendering() {
         Group panel = new Group();
-        for (int i = 0; i < ISLAND_SINGLETON.getArrayCell().length; i++) {
-            for (int j = 0; j < ISLAND_SINGLETON.getArrayCell()[0].length; j++) {
-                Cell rect = ISLAND_SINGLETON.getArrayCell()[i][j];
+        for (int y = 0; y < ISLAND_SINGLETON.getArrayCell().length; y++) {
+            for (int x = 0; x < ISLAND_SINGLETON.getArrayCell()[0].length; x++) {
+                Cell rect = ISLAND_SINGLETON.getArrayCell()[y][x];
                 rect.setFill(Color.CORAL);
                 rect.setStroke(Color.BLACK);
                 panel.getChildren().add(rect);

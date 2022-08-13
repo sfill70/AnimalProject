@@ -10,7 +10,7 @@ public class Deer extends Herbivore {
     static {
         UtilAnimal.putMapAmountAnimal(Deer.class, 170);
         UtilAnimal.putSpeedAnimal(Deer.class, 5);
-        UtilAnimal.putAbilityToReproduce(Deer.class, 1);
+        UtilAnimal.putAbilityToReproduce(Deer.class, 2);
     }
 
     public Deer() {

@@ -10,7 +10,7 @@ public class Rabbit extends Herbivore {
     static {
         UtilAnimal.putMapAmountAnimal(Rabbit.class, 550);
         UtilAnimal.putSpeedAnimal(Rabbit.class, 2);
-        UtilAnimal.putAbilityToReproduce(Rabbit.class, 1);
+        UtilAnimal.putAbilityToReproduce(Rabbit.class, 2);
     }
 
     public Rabbit() {

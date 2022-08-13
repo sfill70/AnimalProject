@@ -8,9 +8,9 @@ import com.example.animalproject.app.land.resident.predator.Eagle;
 public class Goat extends Herbivore {
 
     static {
-        UtilAnimal.putMapAmountAnimal(Goat.class, 400);
+        UtilAnimal.putMapAmountAnimal(Goat.class, 100);
         UtilAnimal.putSpeedAnimal(Goat.class, 3);
-        UtilAnimal.putAbilityToReproduce(Goat.class, 9);
+        UtilAnimal.putAbilityToReproduce(Goat.class, 3);
     }
 
     public Goat(){

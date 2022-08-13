@@ -10,7 +10,7 @@ public class Boar extends Herbivore {
         UtilAnimal.putMapAmountAnimal(Boar.class, 150);
         chanceSuccessfulHunt.put(Mouse.class, 50);
         UtilAnimal.putSpeedAnimal(Boar.class, 2);
-        UtilAnimal.putAbilityToReproduce(Boar.class, 1);
+        UtilAnimal.putAbilityToReproduce(Boar.class, 2);
     }
 
     public Boar() {

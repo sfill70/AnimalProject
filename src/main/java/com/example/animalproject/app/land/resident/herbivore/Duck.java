@@ -10,7 +10,7 @@ public class Duck extends Herbivore {
         UtilAnimal.putMapAmountAnimal(Duck.class, 200);
         chanceSuccessfulHunt.put(Caterpillar.class, 100);
         UtilAnimal.putSpeedAnimal(Duck.class, 4);
-        UtilAnimal.putAbilityToReproduce(Duck.class, 1);
+        UtilAnimal.putAbilityToReproduce(Duck.class, 3);
     }
 
 
