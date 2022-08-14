@@ -21,7 +21,7 @@ public class Duck extends Herbivore {
     }
 
     @Override
-    public Animal reproduce(Cell cell) {
+    public Animal reproduceAnimal(Cell cell) {
         Duck animal = new Duck();
         animal.setCell(cell);
         cell.add(animal);

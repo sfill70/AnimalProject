@@ -1,8 +1,6 @@
 package com.example.animalproject.app.land;
 
 import com.example.animalproject.app.land.resident.Animal;
-import com.example.animalproject.app.land.resident.herbivore.*;
-import com.example.animalproject.app.land.resident.predator.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -76,7 +74,7 @@ public class UtilAnimal {
      * Создает по одному экземнляру животного для инициализации из статики
      */
     private static void animalsInitialization() throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        List<String> listClazzName = getlistClazzName();
+        List<String> listClazzName = getListClazzName();
         String baseClazzName = Animal.class.getName().replace(".Animal", "");
         for (String clazzName : listClazzName
         ) {
@@ -84,7 +82,8 @@ public class UtilAnimal {
         }
     }
 
-    private static List<String> getlistClazzName() {
+
+    private static List<String> getListClazzName() {
         List<String> result = null;
         try (Stream<Path> walk = Files.walk(Paths.get(CLAZZ_PATH))) {
             result = walk.filter(Files::isRegularFile).filter(path -> !path.endsWith("Animal.java")).

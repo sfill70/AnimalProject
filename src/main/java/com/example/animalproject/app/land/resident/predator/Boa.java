@@ -22,7 +22,7 @@ public class Boa extends Predator {
     }
 
     @Override
-    public Animal reproduce(Cell cell) {
+    public Animal reproduceAnimal(Cell cell) {
         Boa animal = new Boa();
         animal.setCell(cell);
         cell.add(animal);

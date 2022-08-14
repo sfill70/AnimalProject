@@ -32,7 +32,7 @@ public class Caterpillar extends Herbivore {
     }
 
     @Override
-    public Animal reproduce(Cell cell) {
+    public Animal reproduceAnimal(Cell cell) {
         Caterpillar animal = new Caterpillar();
         animal.setCell(cell);
         cell.add(animal);

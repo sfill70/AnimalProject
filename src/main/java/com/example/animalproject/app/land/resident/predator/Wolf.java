@@ -27,7 +27,7 @@ public class Wolf extends Predator {
     }
 
     @Override
-    public Animal reproduce(Cell cell) {
+    public Animal reproduceAnimal(Cell cell) {
         Wolf wolf = new Wolf();
         wolf.setCell(cell);
         cell.add(wolf);

@@ -4,6 +4,8 @@ import com.example.animalproject.PlayingField;
 import com.example.animalproject.app.land.Cell;
 import com.example.animalproject.app.land.UtilAnimal;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadLocalRandom;
@@ -20,7 +22,7 @@ public abstract class Animal implements Comparable<Animal> {
      * общее количество животных данного вида
      * оставлено для создания быстрой общей статистики.
      */
-    static private volatile AtomicInteger count = new AtomicInteger(0);
+    static private final AtomicInteger count = new AtomicInteger(0);
     public int weight;
     /**
      * потребление пищи
@@ -40,6 +42,7 @@ public abstract class Animal implements Comparable<Animal> {
      * Map для хранения Шанс съесть животное
      */
     public static ConcurrentHashMap<Class<?>, Integer> chanceSuccessfulHunt = new ConcurrentHashMap<>();
+    public Animal animal = this;
 
     public Animal() {
         count.incrementAndGet();
@@ -47,11 +50,23 @@ public abstract class Animal implements Comparable<Animal> {
                 31 * ThreadLocalRandom.current().nextInt(50, 100);
     }
 
+/**
+ * Метод получения животного из ссылки на себя, удобен тем, что не требует переопределения
+ * в классах наследниках, если это не правильно, можно воспользоваться методом ниже, можно
+ * сделать void возврат животного больше не используется*/
+    public <T extends Animal> T reproduce(Cell cell) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+        Constructor<?> animalConstructor = animal.getClass().getConstructor();
+        T animalAny = (T) animalConstructor.newInstance();
+        animalAny.setCell(cell);
+        cell.add(animalAny);
+        return animalAny;
+    }
+
     /**
      * Абстрактный метод создания животного и добавления в переданную локацию
      * переопределяется в классах животных.
      */
-    public abstract Animal reproduce(Cell cell);
+    public abstract Animal reproduceAnimal(Cell cell);
 
 
     /**

@@ -20,7 +20,7 @@ public class Mouse extends Herbivore {
     }
 
     @Override
-    public Animal reproduce(Cell cell) {
+    public Animal reproduceAnimal(Cell cell) {
         Mouse animal = new Mouse();
         animal.setCell(cell);
         cell.add(animal);

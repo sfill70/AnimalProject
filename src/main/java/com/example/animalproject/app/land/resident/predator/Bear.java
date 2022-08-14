@@ -26,7 +26,7 @@ public class Bear extends Predator {
     }
 
     @Override
-    public Animal reproduce(Cell cell) {
+    public Animal reproduceAnimal(Cell cell) {
         Bear animal = new Bear();
         animal.setCell(cell);
         cell.add(animal);

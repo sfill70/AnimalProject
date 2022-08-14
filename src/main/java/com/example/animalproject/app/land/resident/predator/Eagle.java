@@ -24,7 +24,7 @@ public class Eagle extends Predator {
     }
 
     @Override
-    public Animal reproduce(Cell cell) {
+    public Animal reproduceAnimal(Cell cell) {
         Eagle animal = new Eagle();
         animal.setCell(cell);
         cell.add(animal);

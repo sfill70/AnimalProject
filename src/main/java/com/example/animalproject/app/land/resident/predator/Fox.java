@@ -22,7 +22,7 @@ public class Fox extends Predator {
     }
 
     @Override
-    public Animal reproduce(Cell cell) {
+    public Animal reproduceAnimal(Cell cell) {
         Fox animal = new Fox();
         animal.setCell(cell);
         cell.add(animal);

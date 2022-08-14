@@ -19,7 +19,7 @@ public class Deer extends Herbivore {
         this.degreeOfSaturation = 0;
     }
     @Override
-    public Animal reproduce(Cell cell) {
+    public Animal reproduceAnimal(Cell cell) {
         Deer animal = new Deer();
         animal.setCell(cell);
         cell.add(animal);

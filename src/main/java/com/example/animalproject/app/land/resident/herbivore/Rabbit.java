@@ -20,7 +20,7 @@ public class Rabbit extends Herbivore {
     }
 
     @Override
-    public Animal reproduce(Cell cell) {
+    public Animal reproduceAnimal(Cell cell) {
        Rabbit animal = new Rabbit();
         animal.setCell(cell);
         cell.add(animal);

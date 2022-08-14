@@ -20,7 +20,7 @@ public class Goat extends Herbivore {
     }
 
     @Override
-    public Animal reproduce(Cell cell) {
+    public Animal reproduceAnimal(Cell cell) {
         Goat animal = new Goat();
         animal.setCell(cell);
         cell.add(animal);
