@@ -3,7 +3,6 @@ package com.example.animalproject.app.land;
 import com.example.animalproject.app.land.resident.Animal;
 import com.example.animalproject.app.land.resident.herbivore.*;
 import com.example.animalproject.app.land.resident.predator.*;
-import io.github.classgraph.*;
 
 import java.io.File;
 import java.util.concurrent.ConcurrentHashMap;
