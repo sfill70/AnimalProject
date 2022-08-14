@@ -17,6 +17,10 @@ import com.example.animalproject.app.land.Cell;
 import org.jetbrains.annotations.NotNull;
 
 public class PlayingField extends Application {
+    /**
+     * Здесь толко отрисовка поля и вывод статистики.
+     * ни какой логики нет*/
+
     private static final String title = "Island";
     boolean isMultiThread = Setup.isIS_MULTI_THREAD();
 

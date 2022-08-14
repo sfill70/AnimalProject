@@ -100,6 +100,8 @@ public class UtilAnimal {
     private static void initializationAnimal(String clazzName) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException, ClassNotFoundException {
         Class<?> clazz = Class.forName(clazzName);
         Constructor<?> animalConstructor = clazz.getConstructor();
-        Animal animalAny = (Animal) animalConstructor.newInstance();
+        /*Для инициализации статики в классах не обязательно создавать экземпляр класса
+        * достаточно создать конструктор класса*/
+//        Animal animalAny = (Animal) animalConstructor.newInstance();
     }
 }
