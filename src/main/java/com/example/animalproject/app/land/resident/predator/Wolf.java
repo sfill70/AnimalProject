@@ -16,7 +16,7 @@ public class Wolf extends Predator {
         Wolf.chanceSuccessfulHunt.put(Goat.class, 60);
         Wolf.chanceSuccessfulHunt.put(Sheep.class, 70);
         UtilAnimal.putSpeedAnimal(Wolf.class, 3);
-        UtilAnimal.putAbilityToReproduce(Wolf.class, 1);
+        UtilAnimal.putAbilityToReproduce(Wolf.class, 2);
     }
 
     public Wolf() {

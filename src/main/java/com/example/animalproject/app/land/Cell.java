@@ -66,7 +66,7 @@ public class Cell extends Rectangle {
             try {
                 Animal animalAny = getAnimal((Class<? extends Animal>) animalClazz);
                 this.add(animalAny);
-                int amount = UtilAnimal.getMapAmountAnimal().get(animalClazz) / 4
+                int amount = UtilAnimal.getMapAmountAnimal().get(animalClazz) / 5
                         * ThreadLocalRandom.current().nextInt(70, 100) / 100;
                 for (int i = 0; i < amount; i++) {
                     animalAny.reproduce(animalAny.getCell());
@@ -102,10 +102,6 @@ public class Cell extends Rectangle {
                 an.setMove(true);
                 an.setFree(true);
                 an.setDegreeOfSaturation(an.degreeOfSaturation / 3);
-
-            } else {
-                this.getSetResidents().remove(an);
-                an.getCell().remove(an, "Cell clearAndReproduce() isDead_2");
             }
         }
         for (Class<?> animalClazz : mapCountResidents.keySet()
@@ -132,7 +128,8 @@ public class Cell extends Rectangle {
     }
 
     /**
-     * Метод генерации животного по переданному классу*/
+     * Метод генерации животного по переданному классу
+     */
     @NotNull
     private Animal getAnimal(Class<? extends Animal> animalClazz) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
         Class<? extends Animal> clazz = animalClazz;
@@ -142,37 +139,17 @@ public class Cell extends Rectangle {
         return animalAny;
     }
 
-    public int getIntX() {
-        return intX;
-    }
-
-    public int getIntY() {
-        return intY;
-    }
-
-    public AtomicInteger getFoodHerbivore() {
-        return foodHerbivore;
-    }
-
-    public void setFoodHerbivore(int foodHerbivore) {
-        this.foodHerbivore = new AtomicInteger(foodHerbivore);
-    }
-
-    public AtomicInteger getCarrion() {
-        return carrion;
-    }
-
-    public void setCarrion(AtomicInteger carrion) {
-        this.carrion = carrion;
-    }
-
     /**
      * Метод добавления животного в локацию
      */
     public void add(Animal animal) {
         synchronized (setResidents) {
-            animal.setCell(this);
+            if (!isNotFull(animal)) {
+                animal.dead(animal, "Cell add()");
+                return;
+            }
             boolean isAdd = setResidents.add(animal);
+            animal.setCell(this);
             if (isAdd) {
                 if (mapCountResidents.containsKey(animal.getClass())) {
                     mapCountResidents.put(animal.getClass(),
@@ -201,6 +178,30 @@ public class Cell extends Rectangle {
                 }
             }
         }
+    }
+
+    public int getIntX() {
+        return intX;
+    }
+
+    public int getIntY() {
+        return intY;
+    }
+
+    public AtomicInteger getFoodHerbivore() {
+        return foodHerbivore;
+    }
+
+    public void setFoodHerbivore(int foodHerbivore) {
+        this.foodHerbivore = new AtomicInteger(foodHerbivore);
+    }
+
+    public AtomicInteger getCarrion() {
+        return carrion;
+    }
+
+    public void setCarrion(AtomicInteger carrion) {
+        this.carrion = carrion;
     }
 
     public Set<Animal> getSetResidents() {

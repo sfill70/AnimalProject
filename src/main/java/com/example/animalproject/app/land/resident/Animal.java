@@ -3,6 +3,7 @@ package com.example.animalproject.app.land.resident;
 import com.example.animalproject.PlayingField;
 import com.example.animalproject.app.land.Cell;
 import com.example.animalproject.app.land.UtilAnimal;
+import com.example.animalproject.app.land.resident.predator.Bear;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -50,10 +51,11 @@ public abstract class Animal implements Comparable<Animal> {
                 31 * ThreadLocalRandom.current().nextInt(50, 100);
     }
 
-/**
- * Метод получения животного из ссылки на себя, удобен тем, что не требует переопределения
- * в классах наследниках, если это не правильно, можно воспользоваться методом ниже, можно
- * сделать void возврат животного больше не используется*/
+    /**
+     * Метод получения животного из ссылки на себя, удобен тем, что не требует переопределения
+     * в классах наследниках, если это не правильно, можно воспользоваться методом ниже, можно
+     * сделать void возврат животного больше не используется
+     */
     public <T extends Animal> T reproduce(Cell cell) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
         Constructor<?> animalConstructor = animal.getClass().getConstructor();
         T animalAny = (T) animalConstructor.newInstance();
@@ -116,7 +118,7 @@ public abstract class Animal implements Comparable<Animal> {
             return;
         }
         Cell homeCell = this.getCell();
-        homeCell.remove(this, "Animal move Home");
+        homeCell.remove(this, "Animal move() Home");
         int speed = UtilAnimal.getMapSpeedAnimal().get(this.getClass());
         if (speed == 0) {
             eat(this.getCell());
@@ -138,15 +140,12 @@ public abstract class Animal implements Comparable<Animal> {
                 break;
             }
         }
-        if (nextCell != null) {
-            this.isMove = false;
-            nextCell.add(this);
-            this.isFree = true;
-        } else {
-            this.isMove = false;
-            homeCell.add(this);
-            this.isFree = true;
+        this.isMove = false;
+        Objects.requireNonNullElse(nextCell, homeCell).add(this);
+        if (!this.isAive) {
+            return;
         }
+        this.isFree = true;
     }
 
     /**
