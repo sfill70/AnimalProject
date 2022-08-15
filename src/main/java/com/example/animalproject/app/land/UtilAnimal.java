@@ -15,9 +15,9 @@ import java.util.stream.Stream;
 
 public class UtilAnimal {
     private static final String root = System.getProperty("user.dir");
-    private static final String CLAZZ_PATH = String.join(File.separator, root, /*"AnimalProject",*/ "src",
+    private static final String CLAZZ_PATH = String.join(File.separator, root, "src",
             "main", "java", "com", "example", "animalproject", "app", "land", "resident");
-    private static final String animalPath = String.join(File.separator, root, /*"AnimalProject",*/ "src",
+    private static final String animalPath = String.join(File.separator, root, "src",
             "main", "java", "com", "example", "animalproject", "app", "land", "resident", "Animal.java");
     private static final ConcurrentHashMap<Class<?>, Integer> mapAmountAnimal = new ConcurrentHashMap<>();
     private static final ConcurrentHashMap<Class<?>, Integer> mapSpeedAnimal = new ConcurrentHashMap<>();
@@ -97,11 +97,11 @@ public class UtilAnimal {
         return result;
     }
 
-    private static void initializationAnimal(String clazzName) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException, ClassNotFoundException {
+    private static void initializationAnimal(String clazzName) throws NoSuchMethodException, ClassNotFoundException {
         Class<?> clazz = Class.forName(clazzName);
         Constructor<?> animalConstructor = clazz.getConstructor();
         /*Для инициализации статики в классах не обязательно создавать экземпляр класса
-        * достаточно создать конструктор класса*/
+         * достаточно создать конструктор класса*/
 //        Animal animalAny = (Animal) animalConstructor.newInstance();
     }
 }
