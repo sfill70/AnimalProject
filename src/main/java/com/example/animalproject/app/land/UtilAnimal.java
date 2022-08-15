@@ -82,7 +82,8 @@ public class UtilAnimal {
         }
     }
 
-
+/**
+ * Тут после сборки наверно надо собирать не java файлы а class но примерно так*/
     private static List<String> getListClazzName() {
         List<String> result = null;
         try (Stream<Path> walk = Files.walk(Paths.get(CLAZZ_PATH))) {
