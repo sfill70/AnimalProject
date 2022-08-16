@@ -12,7 +12,7 @@ module com.example.animalproject {
     requires com.almasb.fxgl.all;
     requires annotations;
     requires javafx.graphics;
+//    requires org.reflections;
 
-    opens com.example.animalproject to javafx.fxml;
     exports com.example.animalproject;
 }

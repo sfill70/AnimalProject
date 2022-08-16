@@ -1,6 +1,8 @@
 package com.example.animalproject.app.land;
 
 import com.example.animalproject.app.land.resident.Animal;
+import com.example.animalproject.app.land.resident.herbivore.Herbivore;
+import com.example.animalproject.app.land.resident.predator.Predator;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,8 +12,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
+
+//import org.reflections.Reflections;
 
 public class UtilAnimal {
     private static final String root = System.getProperty("user.dir");
@@ -24,11 +29,15 @@ public class UtilAnimal {
     private static final ConcurrentHashMap<Class<?>, Integer> abilityToReproduce = new ConcurrentHashMap<>();
 
     /**
-     * Нужен для заполнения Map из статики животных
+     * Нужен для заполнения Map из статики животных, закоментированный медод
+     * для работы с библиотекой import org.reflections.Reflections
+     * закоментирован в низу
      */
     static {
         try {
             animalsInitialization();
+
+//            animalsInitializationClass();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (InvocationTargetException e) {
@@ -82,8 +91,9 @@ public class UtilAnimal {
         }
     }
 
-/**
- * Тут после сборки наверно надо собирать не java файлы а class но примерно так*/
+    /**
+     * Тут после сборки наверно надо собирать не java файлы а class но примерно так
+     */
     private static List<String> getListClazzName() {
         List<String> result = null;
         try (Stream<Path> walk = Files.walk(Paths.get(CLAZZ_PATH))) {
@@ -98,11 +108,35 @@ public class UtilAnimal {
         return result;
     }
 
-    private static void initializationAnimal(String clazzName) throws NoSuchMethodException, ClassNotFoundException {
+    private static void initializationAnimal(String clazzName) throws NoSuchMethodException, ClassNotFoundException, InvocationTargetException, InstantiationException, IllegalAccessException {
         Class<?> clazz = Class.forName(clazzName);
         Constructor<?> animalConstructor = clazz.getConstructor();
-        /*Для инициализации статики в классах не обязательно создавать экземпляр класса
-         * достаточно создать конструктор класса*/
-//        Animal animalAny = (Animal) animalConstructor.newInstance();
+        Animal animalAny = (Animal) animalConstructor.newInstance();
     }
+
+    /**
+     * Методы для работы с библиотекой - import org.reflections.Reflections
+     * */
+    /*private static void animalsInitializationClass() throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        Set<Class<? extends Animal>> setClazz = getSetClazz();
+        for (Class<? extends Animal> clazzName : setClazz
+        ) {
+            initializationAnimalFoClass(clazzName);
+        }
+    }
+
+    private static Set<Class<? extends Animal>> getSetClazz() {
+        Reflections reflections = new Reflections("com.example.animalproject");
+        Set<Class<? extends Animal>> classes = reflections.getSubTypesOf(Animal.class);
+        return classes;
+    }
+
+    static void initializationAnimalFoClass(Class<? extends Animal> animalClazz) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+        if (animalClazz.equals(Animal.class) || animalClazz.equals(Predator.class) || animalClazz.equals(Herbivore.class)) {
+            return;
+        }
+        Class<? extends Animal> clazz = animalClazz;
+        Constructor<?> animalConstructor = clazz.getConstructor();
+        Animal animalAny = (Animal) animalConstructor.newInstance();
+    }*/
 }

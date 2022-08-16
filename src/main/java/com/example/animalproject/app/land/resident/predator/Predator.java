@@ -7,8 +7,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class Predator extends Animal {
 
+
+
     /**
-     * Метод еды для хищника. В закоментированном коде можно увидеть, что туда попадают значения false
+     * Метод еды для хищника. В закоментированном коде можно увидеть
      */
     @Override
     public void eat(Cell cell) {
