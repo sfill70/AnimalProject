@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Modifier;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -29,9 +30,9 @@ public class UtilAnimal {
     private static final ConcurrentHashMap<Class<?>, Integer> abilityToReproduce = new ConcurrentHashMap<>();
 
     /**
-     * Нужен для заполнения Map из статики животных, закоментированный медод
-     * для работы с библиотекой import org.reflections.Reflections
-     * закоментирован в низу
+     * Нужен для заполнения Map из статики животных, закоментированный в низу медод
+     * для работает с библиотекой import org.reflections.Reflections
+     * Верхний метод работает с заглушкой
      */
     static {
         try {
@@ -116,7 +117,7 @@ public class UtilAnimal {
 
     /**
      * Методы для работы с библиотекой - import org.reflections.Reflections
-     * */
+     */
     /*private static void animalsInitializationClass() throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         Set<Class<? extends Animal>> setClazz = getSetClazz();
         for (Class<? extends Animal> clazzName : setClazz
@@ -132,7 +133,7 @@ public class UtilAnimal {
     }
 
     static void initializationAnimalFoClass(Class<? extends Animal> animalClazz) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
-        if (animalClazz.equals(Animal.class) || animalClazz.equals(Predator.class) || animalClazz.equals(Herbivore.class)) {
+        if (Modifier.isAbstract(animalClazz.getModifiers())) {
             return;
         }
         Class<? extends Animal> clazz = animalClazz;
