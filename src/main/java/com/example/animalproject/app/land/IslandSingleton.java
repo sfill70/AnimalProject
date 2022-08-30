@@ -12,6 +12,7 @@ import java.util.concurrent.*;
 
 public class IslandSingleton {
     private static volatile IslandSingleton instance;
+
     static int sizeX = PlayingField.getSizeX();
     static int sizeY = PlayingField.getSizeY();
     private final Cell[][] arrayCell = new Cell[sizeY][sizeX];

@@ -36,8 +36,8 @@ public class UtilAnimal {
      */
     static {
         try {
-            animalsInitializationClass();
-//            animalsInitialization();
+            animalsInitialization();
+//            animalsInitializationClass();
 
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -81,37 +81,9 @@ public class UtilAnimal {
     }
 
     /**
-     * Методы для работы с библиотекой - import org.reflections.Reflections
-     * для инициализации из статики у животных и заполнения необходимых данных в Map
-     */
-    private static void animalsInitializationClass() throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        Set<Class<? extends Animal>> setClazz = getSetClazz();
-        for (Class<? extends Animal> clazzName : setClazz
-        ) {
-            initializationAnimalFoClass(clazzName);
-        }
-    }
-
-    private static Set<Class<? extends Animal>> getSetClazz() {
-        Reflections reflections = new Reflections("com.example.animalproject");
-        return reflections.getSubTypesOf(Animal.class);
-    }
-
-    /**
      * Создает по одному экземнляру животного для инициализации из статики
      */
-    static void initializationAnimalFoClass(Class<? extends Animal> animalClazz) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
-        if (Modifier.isAbstract(animalClazz.getModifiers())) {
-            return;
-        }
-        Constructor<?> animalConstructor = animalClazz.getConstructor();
-        Animal animalAny = (Animal) animalConstructor.newInstance();
-    }
-
-    /**
-     * Создает по одному экземнляру животного для инициализации из статики
-     */
-/*    private static void animalsInitialization() throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    private static void animalsInitialization() throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         List<String> listClazzName = getListClazzName();
         String baseClazzName = Animal.class.getName().replace(".Animal", "");
         for (String clazzName : listClazzName
@@ -120,9 +92,9 @@ public class UtilAnimal {
         }
     }
 
-    *//**
-     * Тут после сборки наверно надо собирать не java файлы а class но примерно так
-     *//*
+    /*  *
+     * Тут после сборки наверно надо собирать не java файлы а class но примерно так*/
+
     private static List<String> getListClazzName() {
         List<String> result = null;
         try (Stream<Path> walk = Files.walk(Paths.get(CLAZZ_PATH))) {
@@ -141,6 +113,34 @@ public class UtilAnimal {
         Class<?> clazz = Class.forName(clazzName);
         Constructor<?> animalConstructor = clazz.getConstructor();
         Animal animalAny = (Animal) animalConstructor.newInstance();
+    }
+
+    /**
+     * Методы для работы с библиотекой - import org.reflections.Reflections
+     * для инициализации из статики у животных и заполнения необходимых данных в Map
+     */
+   /* private static void animalsInitializationClass() throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        Set<Class<? extends Animal>> setClazz = getSetClazz();
+        for (Class<? extends Animal> clazzName : setClazz
+        ) {
+            initializationAnimalFoClass(clazzName);
+        }
     }*/
+
+  /*  private static Set<Class<? extends Animal>> getSetClazz() {
+        Reflections reflections = new Reflections("com.example.animalproject");
+        return reflections.getSubTypesOf(Animal.class);
+    }*/
+
+    /**
+     * Создает по одному экземнляру животного для инициализации из статики
+     */
+    private static void initializationAnimalFoClass(Class<? extends Animal> animalClazz) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+        if (Modifier.isAbstract(animalClazz.getModifiers())) {
+            return;
+        }
+        Constructor<?> animalConstructor = animalClazz.getConstructor();
+        Animal animalAny = (Animal) animalConstructor.newInstance();
+    }
 
 }

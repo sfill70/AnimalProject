@@ -1,5 +1,6 @@
 package com.example.animalproject;
 
+import com.example.animalproject.app.land.UtilAnimal;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -14,7 +15,6 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import com.example.animalproject.app.land.IslandSingleton;
 import com.example.animalproject.app.land.Cell;
-import org.jetbrains.annotations.NotNull;
 
 public class PlayingField extends Application {
     /**
@@ -119,7 +119,7 @@ public class PlayingField extends Application {
         this.showAlert(st);
     }
 
-    @NotNull
+
     private ScrollPane rendering() {
         Group panel = new Group();
         for (int y = 0; y < ISLAND_SINGLETON.getArrayCell().length; y++) {
