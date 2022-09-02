@@ -15,14 +15,6 @@
     </properties>
 
     <dependencies>
-        <!-- https://jarcasting.com/artifacts/org.reflections/reflections/ -->
-        <dependency>
-            <groupId>org.reflections</groupId>
-            <artifactId>reflections</artifactId>
-            <version>0.10.2</version>
-        </dependency>
-        <!-- https://www.slf4j.org/codes.html#StaticLoggerBinder
-         SLF4J: No SLF4J providers were found.-->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-api</artifactId>
